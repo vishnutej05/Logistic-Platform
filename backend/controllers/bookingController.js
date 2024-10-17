@@ -1,43 +1,49 @@
 const Booking = require("../models/Booking");
 const Vehicle = require("../models/Vehicle");
-const estimatePrice = require("../utils/priceEstimator"); // Import price estimator
+const Driver = require("../models/Driver"); // Assuming you have a Driver model
+const estimatePrice = require("../utils/priceEstimator");
 
-// Book a vehicle for transport
 const createBooking = async (req, res) => {
   try {
-    const { vehicleId, pickupLocation, dropoffLocation, distance } = req.body;
+    const { vehicleId, pickupLocation, dropoffLocation, distance, driverId } =
+      req.body;
 
-    // Find the vehicle and check if it's available
+    // Find the vehicle
     const vehicle = await Vehicle.findById(vehicleId);
     if (!vehicle) {
-      return res
-        .status(404)
-        .json({ error: "Vehicle not found enter correct vehicle id" });
+      return res.status(404).json({ error: "Vehicle not found" });
     }
 
+    // Ensure vehicle is available
     if (!vehicle.availability) {
       return res.status(400).json({ error: "Vehicle is not available" });
     }
 
-    // Estimate the price based on vehicle type and distance
+    // Find the driver
+    const driver = await Driver.findById(driverId);
+    if (!driver) {
+      return res.status(404).json({ error: "Driver not found" });
+    }
+
+    // Estimate the price
     const price = estimatePrice(vehicle.type, distance);
 
     // Create a new booking
     const booking = new Booking({
-      user: req.userId, // Assume userId comes from authenticated user middleware
+      user: req.userId,
       vehicle: vehicleId,
       pickupLocation,
       dropoffLocation,
-      price, // Set the calculated price
+      price,
       distance,
       status: "pending",
     });
 
-    // Save booking to the database
     await booking.save();
 
-    // Mark vehicle as unavailable for future bookings
+    // Mark vehicle as unavailable and assign the driver
     vehicle.availability = false;
+    vehicle.driver = driverId;
     await vehicle.save();
 
     res.status(201).json({ message: "Booking created successfully", booking });

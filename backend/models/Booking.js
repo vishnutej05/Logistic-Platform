@@ -8,8 +8,20 @@ const bookingSchema = new mongoose.Schema(
       ref: "Vehicle",
       required: true,
     },
-    pickupLocation: { type: String, required: true },
-    dropoffLocation: { type: String, required: true },
+    pickupLocation: {
+      address: { type: String, required: true },
+      coordinates: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true },
+      },
+    },
+    dropoffLocation: {
+      address: { type: String, required: true },
+      coordinates: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true },
+      },
+    },
     status: {
       type: String,
       enum: ["pending", "in-progress", "completed"],

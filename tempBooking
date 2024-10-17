@@ -1,0 +1,109 @@
+import React, { useState, useRef } from "react";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+import axios from "axios";
+
+const libraries = ["places"]; // Import 'places' library from Google Maps API
+
+const CreateBooking = () => {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Google API key from .env
+    libraries,
+  });
+
+  const [pickup, setPickup] = useState("");
+  const [dropoff, setDropoff] = useState("");
+  const [vehicleId, setVehicleId] = useState(""); // Add vehicleId input
+  const [distance, setDistance] = useState(null); // Distance in km (you can calculate this or input manually)
+
+  const autocompletePickupRef = useRef(null);
+  const autocompleteDropoffRef = useRef(null);
+
+  const handlePickupPlaceChange = () => {
+    const place = autocompletePickupRef.current.getPlace();
+    if (place && place.geometry) {
+      setPickup(place.formatted_address); // Set the formatted address
+    }
+  };
+
+  const handleDropoffPlaceChange = () => {
+    const place = autocompleteDropoffRef.current.getPlace();
+    if (place && place.geometry) {
+      setDropoff(place.formatted_address); // Set the formatted address
+    }
+  };
+
+  const handleBookingSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/bookings", {
+        vehicleId, // Vehicle ID from input
+        pickupLocation: pickup, // Pickup location as string
+        dropoffLocation: dropoff, // Dropoff location as string
+        distance, // Distance in kilometers
+      });
+
+      alert(
+        `Booking created successfully! Booking details: ${JSON.stringify(
+          response.data.booking
+        )}`
+      );
+    } catch (error) {
+      console.error(error);
+      alert("Booking failed. Please check the console for details.");
+    }
+  };
+
+  if (!isLoaded) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h2>Create a Booking</h2>
+
+      <label>Vehicle ID:</label>
+      <input
+        type="text"
+        placeholder="Enter vehicle ID"
+        value={vehicleId}
+        onChange={(e) => setVehicleId(e.target.value)}
+        style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+      />
+
+      <Autocomplete
+        onLoad={(autocomplete) =>
+          (autocompletePickupRef.current = autocomplete)
+        }
+        onPlaceChanged={handlePickupPlaceChange}
+      >
+        <input
+          type="text"
+          placeholder="Enter pickup location"
+          style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+        />
+      </Autocomplete>
+
+      <Autocomplete
+        onLoad={(autocomplete) =>
+          (autocompleteDropoffRef.current = autocomplete)
+        }
+        onPlaceChanged={handleDropoffPlaceChange}
+      >
+        <input
+          type="text"
+          placeholder="Enter dropoff location"
+          style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+        />
+      </Autocomplete>
+
+      <input
+        type="number"
+        placeholder="Enter distance in kilometers"
+        value={distance}
+        onChange={(e) => setDistance(e.target.value)}
+        style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+      />
+
+      <button onClick={handleBookingSubmit}>Submit Booking</button>
+    </div>
+  );
+};
+
+export default CreateBooking;
