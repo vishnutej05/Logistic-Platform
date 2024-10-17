@@ -8,7 +8,7 @@ const { Server } = require("socket.io"); // Import Socket.IO
 dotenv.config();
 
 // Import Routes
-const authRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/booking");
 const fleetRoutes = require("./routes/fleet");
 const driverRoutes = require("./routes/drivers");

@@ -25,10 +25,10 @@ const Vehicle = require("../models/Vehicle"); // Import the Vehicle model for va
 // };
 
 const createDriver = async (req, res) => {
-  const { name, licenseNumber, phone, vehicleId, status } = req.body;
+  const { name, licenseNumber, phone, status } = req.body;
 
   // Check for required fields
-  if (!name || !licenseNumber || !phone || !vehicleId || !status) {
+  if (!name || !licenseNumber || !phone || !status) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -40,17 +40,17 @@ const createDriver = async (req, res) => {
       .json({ message: "Invalid status. Must be 'available' or 'busy'." });
   }
 
-  if (req.role !== "driver") {
-    return res
-      .status(403)
-      .json({ message: "Access denied. Only drivers can create drivers." });
-  }
-
   try {
-    // Check if the vehicle exists
-    const vehicle = await Vehicle.findById(vehicleId);
-    if (!vehicle) {
-      return res.status(404).json({ message: "Vehicle not found." });
+    // Check if the driver already exists by name, licenseNumber, or phone
+    const existingDriver = await Driver.findOne({
+      $or: [{ name }, { licenseNumber }, { phone }],
+    });
+
+    if (existingDriver) {
+      return res.status(400).json({
+        message:
+          "Driver with the same name, license number, or phone already exists.",
+      });
     }
 
     // Create a new driver
@@ -58,7 +58,6 @@ const createDriver = async (req, res) => {
       name,
       licenseNumber,
       phone,
-      vehicle: vehicleId, // Assuming the Driver model references the Vehicle
       status,
     });
 

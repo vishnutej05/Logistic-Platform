@@ -7,7 +7,6 @@ const createBooking = async (req, res) => {
   try {
     const { vehicleId, pickupLocation, dropoffLocation, distance, driverId } =
       req.body;
-
     // Find the vehicle
     const vehicle = await Vehicle.findById(vehicleId);
     if (!vehicle) {
@@ -25,6 +24,10 @@ const createBooking = async (req, res) => {
       return res.status(404).json({ error: "Driver not found" });
     }
 
+    if (driver.status !== "available") {
+      return res.status(400).json({ error: "Driver is not available" });
+    }
+
     // Estimate the price
     const price = estimatePrice(vehicle.type, distance);
 
@@ -32,6 +35,7 @@ const createBooking = async (req, res) => {
     const booking = new Booking({
       user: req.userId,
       vehicle: vehicleId,
+      driver: driverId,
       pickupLocation,
       dropoffLocation,
       price,
@@ -46,6 +50,10 @@ const createBooking = async (req, res) => {
     vehicle.driver = driverId;
     await vehicle.save();
 
+    driver.status = "busy";
+    driver.vehicle = vehicleId;
+    await driver.save();
+
     res.status(201).json({ message: "Booking created successfully", booking });
   } catch (error) {
     console.error(error);
@@ -57,7 +65,7 @@ const createBooking = async (req, res) => {
 const getUserBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.userId }).populate(
-      "vehicle"
+      "driver"
     );
     res.status(200).json(bookings);
   } catch (error) {

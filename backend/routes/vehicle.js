@@ -8,19 +8,17 @@ router.post("/create", async (req, res) => {
 
   // Check for required fields
   if (!type || !plateNumber || !model || !capacity) {
-    return res
-      .status(400)
-      .json({
-        message: "Type, plateNumber, model, and capacity are required.",
-      });
+    return res.status(400).json({
+      message: "Type, plateNumber, model, and capacity are required.",
+    });
   }
 
   // Check if the user is an admin
-  if (req.role !== "admin") {
-    return res
-      .status(403)
-      .json({ message: "Access denied. Only admins can add vehicles." });
-  }
+  // if (req.role !== "admin") {
+  //   return res
+  //     .status(403)
+  //     .json({ message: "Access denied. Only admins can add vehicles." });
+  // }
 
   try {
     const newVehicle = new Vehicle({

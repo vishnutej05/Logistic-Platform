@@ -8,6 +8,11 @@ const bookingSchema = new mongoose.Schema(
       ref: "Vehicle",
       required: true,
     },
+    driver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Driver",
+      required: true,
+    },
     pickupLocation: {
       address: { type: String, required: true },
       coordinates: {

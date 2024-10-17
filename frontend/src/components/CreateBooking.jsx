@@ -18,10 +18,10 @@ const CreateBooking = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const [selectedDriver, setSelectedDriver] = useState("");
   const [loadingVehicles, setLoadingVehicles] = useState(false);
+  const [price, setPrice] = useState(null); // New state to hold price
   const autocompletePickupRef = useRef(null);
   const autocompleteDropoffRef = useRef(null);
 
-  // Function to get the token from cookies
   const getToken = () => {
     const tokenString = document.cookie
       .split("; ")
@@ -29,7 +29,6 @@ const CreateBooking = () => {
     return tokenString ? tokenString.split("=")[1] : null;
   };
 
-  // Fetch vehicles (memoized with useCallback)
   const fetchVehicles = useCallback(async () => {
     setLoadingVehicles(true);
     try {
@@ -46,9 +45,8 @@ const CreateBooking = () => {
     } finally {
       setLoadingVehicles(false);
     }
-  }, []); // Empty dependency array ensures it only gets created once
+  }, []);
 
-  // Fetch drivers (memoized with useCallback)
   const fetchDrivers = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/driver/", {
@@ -62,13 +60,12 @@ const CreateBooking = () => {
       console.error("Error fetching drivers:", error);
       alert("Failed to load drivers.");
     }
-  }, []); // Empty dependency array ensures it only gets created once
+  }, []);
 
-  // Run fetchVehicles and fetchDrivers when component mounts
   useEffect(() => {
     fetchVehicles();
     fetchDrivers();
-  }, [fetchVehicles, fetchDrivers]); // Add both functions to the dependency array
+  }, [fetchVehicles, fetchDrivers]);
 
   const handlePickupPlaceChange = () => {
     const place = autocompletePickupRef.current.getPlace();
@@ -97,6 +94,26 @@ const CreateBooking = () => {
   };
 
   const handleBookingSubmit = async () => {
+    const selectedDriverObj = drivers.find(
+      (driver) => driver._id === selectedDriver
+    );
+    if (selectedDriverObj && selectedDriverObj.status === "busy") {
+      alert(
+        "The selected driver is currently busy. Please choose an available driver."
+      );
+      return;
+    }
+
+    // console.log(selectedVehicleObj);
+
+    const selectedVehicleObj = vehicles.find(
+      (vehicle) => vehicle._id === selectedVehicle
+    );
+    if (selectedVehicleObj && !selectedVehicleObj.availability) {
+      alert("The selected vehicle is not available at this time.");
+      return;
+    }
+
     if (
       !selectedVehicle ||
       !pickup ||
@@ -110,15 +127,33 @@ const CreateBooking = () => {
       return;
     }
 
+    if (distance <= 0) {
+      alert("Don't enter negative or zero distance.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/bookings",
         {
           vehicleId: selectedVehicle,
           driverId: selectedDriver,
-          pickupLocation: pickup,
-          dropoffLocation: dropoff,
-          distance: parseFloat(distance), // Ensure distance is a number
+          pickupLocation: {
+            address: pickup.address,
+            coordinates: {
+              lat: pickup.coordinates.lat,
+              lng: pickup.coordinates.lng,
+            },
+          },
+          dropoffLocation: {
+            address: dropoff.address,
+            coordinates: {
+              lat: dropoff.coordinates.lat,
+              lng: dropoff.coordinates.lng,
+            },
+          },
+          status: "pending",
+          distance: parseFloat(distance),
         },
         {
           headers: {
@@ -128,6 +163,9 @@ const CreateBooking = () => {
         }
       );
 
+      // Set the price state with the returned price
+      //   console.log(response.data.booking.price);
+      setPrice(response.data.booking.price);
       alert(`Booking created! Booking ID: ${response.data.booking._id}`);
     } catch (error) {
       console.error("Booking error:", error);
@@ -141,7 +179,6 @@ const CreateBooking = () => {
     <div>
       <h2>Create a Booking</h2>
 
-      {/* Pickup Location */}
       <Autocomplete
         onLoad={(autocomplete) =>
           (autocompletePickupRef.current = autocomplete)
@@ -155,7 +192,6 @@ const CreateBooking = () => {
         />
       </Autocomplete>
 
-      {/* Dropoff Location */}
       <Autocomplete
         onLoad={(autocomplete) =>
           (autocompleteDropoffRef.current = autocomplete)
@@ -169,21 +205,22 @@ const CreateBooking = () => {
         />
       </Autocomplete>
 
-      {/* Vehicle Selection */}
       <label>Vehicle:</label>
       <select
         value={selectedVehicle}
         onChange={(e) => setSelectedVehicle(e.target.value)}
       >
         <option value="">Select a vehicle</option>
+        {/* {console.log(vehicles)} */}
         {vehicles.map((vehicle) => (
           <option key={vehicle._id} value={vehicle._id}>
-            {vehicle.type} (Capacity: {vehicle.capacity})
+            {`Type: ${vehicle.type}||  Model: ${vehicle.model}|| Capacity: ${
+              vehicle.capacity
+            }|| Available: ${vehicle.availability ? "Yes" : "No"}`}
           </option>
         ))}
       </select>
 
-      {/* Driver Selection */}
       <label>Driver:</label>
       <select
         value={selectedDriver}
@@ -197,7 +234,6 @@ const CreateBooking = () => {
         ))}
       </select>
 
-      {/* Distance Input */}
       <br />
       <br />
       <input
@@ -208,10 +244,16 @@ const CreateBooking = () => {
         style={{ width: "300px", height: "40px", marginBottom: "20px" }}
       />
 
-      {/* Submit Button */}
       <button onClick={handleBookingSubmit} disabled={loadingVehicles}>
         {loadingVehicles ? "Loading vehicles..." : "Submit Booking"}
       </button>
+
+      {/* Display price once booking is confirmed */}
+      {price && (
+        <div style={{ marginTop: "20px", fontWeight: "bold" }}>
+          Price: ₹{price}
+        </div>
+      )}
     </div>
   );
 };
