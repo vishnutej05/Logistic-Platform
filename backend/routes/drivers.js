@@ -2,17 +2,28 @@ const express = require("express");
 const {
   createDriver,
   driversList,
+  getAvailableBookings,
+  acceptBooking,
+  currentBooking,
+  driverDetails,
 } = require("../controllers/driverController");
 const router = express.Router();
 
 //Create a new driver
 router.post("/create", createDriver);
 
-// Not needed because while creating a driver we will assign a vehicle to the driver
-// router.post("/assign-vehicle", assignVehicle);
-
+//list of drivers
 router.get("/", driversList);
 
-// router.delete("/", deleteDriver);
+//to show available bookings for drivers
+router.get("/available-bookings", getAvailableBookings);
+
+//to accept bookings
+router.post("/accept-booking/:bookingId", acceptBooking);
+
+//to show current bookings
+router.get("/current-bookings/", currentBooking);
+
+router.get("/details", driverDetails);
 
 module.exports = router;

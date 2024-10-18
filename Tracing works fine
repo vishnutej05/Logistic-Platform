@@ -1,0 +1,137 @@
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import axios from "axios";
+
+const socket = io("http://localhost:5000"); // Replace with actual backend address
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "100vh", // Full-screen map
+};
+
+const defaultCenter = {
+  lat: 28.6139, // Default center (New Delhi)
+  lng: 77.209,
+};
+
+const DriverTracking = () => {
+  const [driverLocation, setDriverLocation] = useState(null);
+  const [driverName, setDriverName] = useState(null); // State to hold driver's name
+  // const [movementInterval, setMovementInterval] = useState(null); //To Simulate moving
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Replace with your API key
+  });
+
+  const getToken = () => {
+    const tokenString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="));
+    return tokenString ? tokenString.split("=")[1] : null;
+  };
+
+  useEffect(() => {
+    // Fetch driver details
+    const fetchDriverDetails = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/driver/details",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
+            },
+          }
+        );
+
+        console.log(response.data.name);
+        setDriverName(response.data.name); // Set driver's name
+      } catch (error) {
+        console.error("Error fetching driver details:", error);
+      }
+    };
+
+    fetchDriverDetails();
+  }, []);
+
+  useEffect(() => {
+    // Get and track the driver's location
+    const trackDriverLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            const locationData = {
+              driverName: driverName, // Use driver's name
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+
+            // Emit location updates to the server
+            socket.emit("driverLocationUpdate", locationData);
+            setDriverLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation not supported.");
+      }
+    };
+
+    trackDriverLocation();
+  }, [driverName]); // Dependency on driverName to ensure it's available
+
+  // useEffect(() => {
+  //   // Simulate driver movement
+  //   const simulateDriverMovement = () => {
+  //     let lat = 17.5319321; // Starting latitude
+  //     let lng = 78.5187863; // Starting longitude
+  //     const speed = 0.01; // Movement speed
+
+  //     const interval = setInterval(() => {
+  //       lat += (Math.random() - 0.5) * speed; // Random latitude change
+  //       lng += (Math.random() - 0.5) * speed; // Random longitude change
+
+  //       const locationData = {
+  //         driverId: "123", // This could be dynamic based on actual driver ID
+  //         latitude: lat,
+  //         longitude: lng,
+  //       };
+
+  //       // Emit location updates to the server
+  //       socket.emit("driverLocationUpdate", locationData);
+  //       setDriverLocation({
+  //         lat,
+  //         lng,
+  //       });
+  //     }, 2000); // Update every 2 seconds
+
+  //     setMovementInterval(interval);
+
+  //     return () => clearInterval(interval); // Clean up on unmount
+  //   };
+
+  //   simulateDriverMovement();
+  // }, []);
+
+  if (!isLoaded) return <div>Loading Maps...</div>;
+
+  return (
+    <>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={14}
+        center={driverLocation || defaultCenter}
+      >
+        {driverLocation && <Marker position={driverLocation} />}
+      </GoogleMap>
+    </>
+  );
+};
+
+export default DriverTracking;

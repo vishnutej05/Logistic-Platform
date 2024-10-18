@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const libraries = ["places"];
 
 const CreateBooking = () => {
+  const navigate = useNavigate();
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -104,8 +107,6 @@ const CreateBooking = () => {
       return;
     }
 
-    // console.log(selectedVehicleObj);
-
     const selectedVehicleObj = vehicles.find(
       (vehicle) => vehicle._id === selectedVehicle
     );
@@ -167,6 +168,7 @@ const CreateBooking = () => {
       //   console.log(response.data.booking.price);
       setPrice(response.data.booking.price);
       alert(`Booking created! Booking ID: ${response.data.booking._id}`);
+      navigate("/track-driver");
     } catch (error) {
       console.error("Booking error:", error);
       alert("Booking failed.");

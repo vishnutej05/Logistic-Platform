@@ -1,6 +1,6 @@
 const Booking = require("../models/Booking");
 const Vehicle = require("../models/Vehicle");
-const Driver = require("../models/Driver"); // Assuming you have a Driver model
+const Driver = require("../models/Driver"); // Assuming you have a Driver mode
 const estimatePrice = require("../utils/priceEstimator");
 
 const createBooking = async (req, res) => {

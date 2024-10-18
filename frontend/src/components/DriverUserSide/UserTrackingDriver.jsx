@@ -62,17 +62,23 @@ const UserTracking = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-    <GoogleMap
-      mapContainerStyle={mapContainerStyle}
-      zoom={14}
-      center={driverLocation || defaultCenter} // Center map on driver location or default center
-    >
-      {/* Marker at the driver's current location */}
-      {driverLocation && <Marker position={driverLocation} />}
+    <>
+      <h1>You are now tracking drivers movement</h1>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={14}
+        center={driverLocation || defaultCenter} // Center map on driver location or default center
+      >
+        {/* Marker at the driver's current location */}
+        {driverLocation && <Marker position={driverLocation} />}
 
-      {/* Polyline to track the driver's movement */}
-      {path.length > 1 && <Polyline path={path} options={polylineOptions} />}
-    </GoogleMap>
+        {/* Marker at the starting point of the polyline (first path point) */}
+        {path.length > 0 && <Marker position={path[0]} />}
+
+        {/* Polyline to track the driver's movement */}
+        {path.length > 1 && <Polyline path={path} options={polylineOptions} />}
+      </GoogleMap>
+    </>
   );
 };
 
