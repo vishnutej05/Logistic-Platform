@@ -1,0 +1,89 @@
+/* Overall container layout */
+
+.driver-dashboard-container {
+  display: flex;
+  flex-direction: column; /* Change to column for vertical stacking */
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+  background-color: #f0f2f5; /* Light background */
+}
+
+/* Driver location box */
+.driver-location {
+  width: 100%;
+  max-width: 600px; /* Adjust max width */
+  height: 180px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px; /* Add margin to create space below */
+  z-index: 1;
+}
+
+/* Main dashboard that takes most of the space */
+.main-dashboard {
+  /* flex-grow: 1; */
+  width: 100%;
+  max-width: 1000px; /* Adjust max width */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+/* Booking card styling */
+.booking-card {
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.booking-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.booking-card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.booking-card p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.booking-card button {
+  padding: 8px 16px;
+  background-color: #4191e7;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.booking-card button:hover {
+  background-color: #0056b3;
+}
+
+/* For displaying current booking in a neat manner */
+.current-booking {
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fffbeb; /* Light yellow to highlight current booking */
+}

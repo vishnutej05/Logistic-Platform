@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../common/API";
-import "./DriverDashboard.css";
+import "./DriverRides.css";
 
 const DriverDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -21,7 +21,11 @@ const DriverDashboard = () => {
       });
       setBookings(data);
     } catch (error) {
-      console.error("Error fetching available bookings", error);
+      console.error(
+        "Error fetching available bookings",
+        error.response.data,
+        error.response.status
+      );
     }
   };
 
@@ -40,14 +44,18 @@ const DriverDashboard = () => {
         price: data[0].price,
       };
 
-      console.log("These are my details of current booking", details);
+      // console.log("These are my details of current booking", details);
       setCurrentBooking(details); // Store the current booking details
     } catch (error) {
       if (error.response?.status === 404) {
         // No current booking, fetch available bookings
         fetchAvailableBookings();
       } else {
-        console.error("Error fetching current booking", error);
+        console.error(
+          "Error fetching current booking",
+          error.response.data,
+          error.response.status
+        );
       }
     }
   };
@@ -72,14 +80,14 @@ const DriverDashboard = () => {
   };
 
   // Fetch current booking on component mount
+  // eslint-disable-next-line
   useEffect(() => {
     fetchCurrentBooking(); // Always attempt to get current booking first
   }, []);
-
   // Render the current booking if one is active
   if (currentBooking) {
     const { pickupAddress, dropoffAddress, price, distance } = currentBooking;
-    console.log("Current Booking", currentBooking);
+    // console.log("Current Booking", currentBooking);
     return (
       <div>
         <h2>Current Booking</h2>
@@ -87,6 +95,8 @@ const DriverDashboard = () => {
         <p>Dropoff: {dropoffAddress || "Not available"}</p>
         <p>Distance: {distance} km</p>
         <p>Price: ₹{price}</p>
+        <button>View Details</button>
+        {/* when clicked on this it should redirect to maps and should shot destination on maps and style this buytton */}
       </div>
     );
   }
@@ -104,6 +114,7 @@ const DriverDashboard = () => {
             <p>Pickup: {booking.pickupLocation?.address || "Not available"}</p>
             <p>Drop: {booking.dropoffLocation?.address || "Not available"}</p>
             <p>Distance: {booking.distance} km</p>
+            <p>Price: {booking.price} </p>
             <button onClick={() => handleAcceptBooking(booking._id)}>
               Accept
             </button>

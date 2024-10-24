@@ -1,8 +1,8 @@
 const vehicleRates = {
-  bike: 25, // Example: 20 per km
-  car: 40, // Example: 40 per km
-  van: 70, // Example: 60 per km
-  truck: 120, // Example: 100 per km
+  bike: [500, 10], // Example: 20 per km
+  car: [800, 15], // Example: 40 per km
+  van: [1000, 20], // Example: 60 per km
+  truck: [2000, 25], // Example: 100 per km
 };
 
 // Function to estimate price based on vehicle type and distance
@@ -11,7 +11,7 @@ const estimatePrice = (vehicleType, distance) => {
   if (!rate) {
     throw new Error("Invalid vehicle type");
   }
-  return distance * rate;
+  const result = rate[0] + distance * rate[1];
+  return result;
 };
-
 module.exports = estimatePrice;

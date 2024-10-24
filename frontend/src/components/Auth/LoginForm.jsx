@@ -11,7 +11,11 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post("/auth/login", { email, password });
-      document.cookie = `token=${data.token}; path=/;`; // Store JWT in cookies
+      const now = new Date();
+      now.setTime(now.getTime() + 2 * 24 * 60 * 60 * 1000); // 2 days in milliseconds
+      const expires = `expires=${now.toUTCString()}`;
+      // Store JWT in cookies with 2-day expiry
+      document.cookie = `token=${data.token}; path=/; ${expires};`;
       alert("Login successful");
       // navigate("/driver-dashboard");
     } catch (error) {

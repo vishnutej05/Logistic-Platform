@@ -67,30 +67,37 @@ const getAvailableBookings = async (req, res) => {
   try {
     const driverUserId = req.userId; // Get user ID from the auth middleware
 
+    // Check if the user's role is 'driver'
+    if (req.role !== "driver") {
+      return res
+        .status(403)
+        .json({ message: "Access denied. Only drivers are allowed." });
+    }
+
     // Find the driver associated with the user ID
     const driver = await Driver.findOne({ user: driverUserId });
 
     if (!driver) {
       return res.status(404).json({ message: "Driver not found." });
     }
+
     const driverId = driver._id; // Extract the driver's ID
 
-    console.log(driverId);
     // Fetch pending bookings for the specific driver
-    const booking = await Booking.find({
+    const bookings = await Booking.find({
       driver: driverId,
       status: "pending", // Only fetch pending bookings
     });
 
-    console.log(driverId, booking);
-
-    if (!booking.length) {
+    if (!bookings.length) {
       return res.status(404).json({ message: "No available bookings." });
     }
 
-    res.status(200).json(booking);
+    res.status(200).json(bookings);
   } catch (error) {
-    res.status(500).json({ error: "Error fetching bookings" });
+    res
+      .status(500)
+      .json({ message: "Error fetching bookings", error: error.message });
   }
 };
 

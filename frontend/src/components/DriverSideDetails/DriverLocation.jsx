@@ -2,20 +2,11 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useLoadScript } from "@react-google-maps/api";
 import axios from "axios";
+import "./DriverLocation.css";
 
 const socket = io("http://localhost:5000"); // Replace with actual backend address
 
-// const mapContainerStyle = {
-//   width: "100%",
-//   height: "100vh", // Full-screen map
-// };
-
-// const defaultCenter = {
-//   lat: 28.6139, // Default center (New Delhi)
-//   lng: 77.209,
-// };
-
-const DriverTracking = () => {
+const DriverLocation = () => {
   const [driverLocation, setDriverLocation] = useState(null);
   const [driverName, setDriverName] = useState(null); // State to hold driver's name
 
@@ -89,13 +80,13 @@ const DriverTracking = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.infoContainer}>
-        <h2 style={styles.header}>Driver Tracking</h2>
-        <p style={styles.infoText}>
+    <div className="driver-location-container">
+      <div className="info-container">
+        <h2 className="header">Driver Tracking</h2>
+        <p className="info-text">
           <strong>Driver Name:</strong> {driverName ? driverName : "Loading..."}
         </p>
-        <p style={styles.infoText}>
+        <p className="info-text">
           <strong>Current Location:</strong>{" "}
           {driverLocation
             ? `Lat: ${driverLocation.lat}, Lng: ${driverLocation.lng}`
@@ -103,44 +94,17 @@ const DriverTracking = () => {
         </p>
       </div>
 
-      {/* <GoogleMap
+      {/* 
+      <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={14}
         center={driverLocation || defaultCenter}
       >
         {driverLocation && <Marker position={driverLocation} />}
-      </GoogleMap> */}
+      </GoogleMap> 
+      */}
     </div>
   );
 };
 
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "500px",
-    fontFamily: "Arial, sans-serif",
-    backgroundColor: "#f5f5f5",
-  },
-  infoContainer: {
-    padding: "20px",
-    backgroundColor: "#fff",
-    borderRadius: "10px",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-    textAlign: "center",
-  },
-  header: {
-    fontSize: "24px",
-    marginBottom: "10px",
-    color: "#333",
-  },
-  infoText: {
-    fontSize: "18px",
-    margin: "8px 0",
-    color: "#555",
-  },
-};
-
-export default DriverTracking;
+export default DriverLocation;
