@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "../common/API";
-import "./DriverRides.css";
+import { useNavigate } from "react-router-dom";
+// import "./DriverRides.css";
 
 const DriverDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [currentBooking, setCurrentBooking] = useState(null); // To store current booking details
-
+  const navigate = useNavigate();
   // Function to get the JWT token from cookies
   const getToken = () =>
     document.cookie
@@ -79,23 +80,25 @@ const DriverDashboard = () => {
     }
   };
 
-  // Fetch current booking on component mount
-  // eslint-disable-next-line
+  const handleViewDetails = () => {
+    navigate("/track-driver"); //Create a maps where the driver can see the destination address
+  };
+
   useEffect(() => {
     fetchCurrentBooking(); // Always attempt to get current booking first
   }, []);
-  // Render the current booking if one is active
+
   if (currentBooking) {
     const { pickupAddress, dropoffAddress, price, distance } = currentBooking;
     // console.log("Current Booking", currentBooking);
     return (
-      <div>
+      <div className="current-booking">
         <h2>Current Booking</h2>
         <p>Pickup: {pickupAddress || "Not available"}</p>
         <p>Dropoff: {dropoffAddress || "Not available"}</p>
         <p>Distance: {distance} km</p>
         <p>Price: ₹{price}</p>
-        <button>View Details</button>
+        <button onClick={handleViewDetails}>View Details</button>
         {/* when clicked on this it should redirect to maps and should shot destination on maps and style this buytton */}
       </div>
     );

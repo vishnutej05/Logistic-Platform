@@ -1,5 +1,11 @@
 /* Overall container layout */
 
+body{
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
 .driver-dashboard-container {
   display: flex;
   flex-direction: column; /* Change to column for vertical stacking */
@@ -26,7 +32,6 @@
 
 /* Main dashboard that takes most of the space */
 .main-dashboard {
-  /* flex-grow: 1; */
   width: 100%;
   max-width: 1000px; /* Adjust max width */
   background-color: white;
@@ -49,7 +54,7 @@
 }
 
 .booking-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .booking-card h3 {
@@ -76,6 +81,7 @@
 
 .booking-card button:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
 }
 
 /* For displaying current booking in a neat manner */
@@ -84,6 +90,26 @@
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fffbeb; /* Light yellow to highlight current booking */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.booking-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.current-booking button {
+  padding: 8px 16px;
+  background-color: #202b21;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.current-booking button:hover {
+  background-color: #5dd74a;
+  color:black
 }
