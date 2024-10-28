@@ -12,7 +12,7 @@ export default function Homepage() {
       <Link to="/booking">Create Booking</Link>
       <br />
       <br />
-      <Link to="/destination">Destination Page</Link>
+      <Link to="/dashboard">Dashboard Page</Link>
       <br />
       <br />
       <Link to="/driver-dashboard">Driver Dashboard</Link>

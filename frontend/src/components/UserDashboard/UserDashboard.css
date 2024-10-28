@@ -1,0 +1,136 @@
+/* UserDashboard.css */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif; /* Using a clean sans-serif font */
+  background-color: #f4f4f4; /* Light background for contrast */
+}
+
+.dashboard-container {
+  padding: 20px;
+  max-width: 1200px; /* Maximum width for better readability */
+  margin: auto; /* Center the dashboard */
+  background: white; /* White background for the dashboard */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.head {
+  text-align: center; /* Center the main heading */
+  color: #333; /* Dark text color */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+h2 {
+  color: #555; /* Slightly lighter color for subheading */
+  margin-bottom: 15px; /* Space below the subheading */
+  border-bottom: 2px solid #007bff; /* Underline effect */
+  padding-bottom: 5px; /* Space between text and underline */
+}
+
+.bookings-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  margin-top: 10px; /* Space above the bookings section */
+}
+
+.booking-card {
+  background-color: #ffffff; /* White background for cards */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  padding: 20px; /* Inner padding */
+  flex: 1 1 calc(30% - 20px); /* Flexbox for responsiveness, allowing three cards in a row */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition effects */
+}
+
+.booking-card:hover {
+  transform: translateY(-5px); /* Slightly lift the card on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+}
+
+.create-booking-button {
+  display: flex;               /* Use flexbox for centering */
+  justify-content: center;     /* Center horizontally */
+  align-items: center;         /* Center vertically */
+  flex-direction: column;      /* Stack elements vertically if needed */
+}
+
+.create-booking-button button {
+  width: 150px;                /* Optional: Set a fixed width for the button */
+}
+
+
+.button {
+  --main-focus: #007bff; /* A vibrant blue for primary actions */
+  --font-color: #ffffff; /* White for better contrast on dark backgrounds */
+  --bg-color-sub: #2c2f33; /* A dark gray for secondary backgrounds */
+  --bg-color: #23272a; /* A slightly lighter shade for the main background */
+  --main-color: #61dafb; /* A soft blue for highlights and borders */
+  position: relative;
+  width: 150px; /* Button width */
+  height: 40px; /* Button height */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s; /* Smooth transition for button effects */
+}
+
+.button, .button__icon, .button__text {
+  transition: all 0.3s;
+}
+
+.button .button__text {
+  transform: translateX(25px);
+  color: var(--font-color);
+  font-weight: 600;
+}
+
+.button .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: var(--bg-color-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button .svg {
+  width: 20px;
+  stroke: var(--main-color);
+}
+
+.button:hover {
+  background: var(--bg-color);
+}
+
+.button:hover .button__text {
+  color: transparent;
+}
+
+.button:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+p {
+  margin: 5px 0; /* Space above and below paragraphs */
+  color: #666; /* Light gray color for text */
+  line-height: 1.5; /* Increase line height for readability */
+}
+
+strong {
+  color: #333; /* Dark color for strong text */
+}

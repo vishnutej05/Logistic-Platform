@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
-import axios from "axios";
+import site from "../common/API";
+import "./CreateBooking.css";
 // import { useNavigate } from "react-router-dom";
 
 const libraries = ["places"];
@@ -35,7 +36,7 @@ const CreateBooking = () => {
   const fetchVehicles = useCallback(async () => {
     setLoadingVehicles(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/vehicle/", {
+      const response = await site.get("/api/vehicle/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getToken()}`,
@@ -52,7 +53,7 @@ const CreateBooking = () => {
 
   const fetchDrivers = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/driver/", {
+      const response = await site.get("/api/driver/", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getToken()}`,
@@ -134,8 +135,8 @@ const CreateBooking = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/bookings",
+      const response = await site.post(
+        "/api/bookings",
         {
           vehicleId: selectedVehicle,
           driverId: selectedDriver,
@@ -178,7 +179,7 @@ const CreateBooking = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="create-booking-container">
       <h2>Create a Booking</h2>
 
       <Autocomplete
@@ -190,7 +191,7 @@ const CreateBooking = () => {
         <input
           type="text"
           placeholder="Enter pickup location"
-          style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+          className="autocomplete-input"
         />
       </Autocomplete>
 
@@ -203,7 +204,7 @@ const CreateBooking = () => {
         <input
           type="text"
           placeholder="Enter dropoff location"
-          style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+          className="autocomplete-input"
         />
       </Autocomplete>
 
@@ -211,14 +212,14 @@ const CreateBooking = () => {
       <select
         value={selectedVehicle}
         onChange={(e) => setSelectedVehicle(e.target.value)}
+        className="select-dropdown"
       >
         <option value="">Select a vehicle</option>
-        {/* {console.log(vehicles)} */}
         {vehicles.map((vehicle) => (
           <option key={vehicle._id} value={vehicle._id}>
-            {`Type: ${vehicle.type}||  Model: ${vehicle.model}|| Capacity: ${
+            {`Type: ${vehicle.type} | Model: ${vehicle.model} | Capacity: ${
               vehicle.capacity
-            }|| Available: ${vehicle.availability ? "Yes" : "No"}`}
+            } | Available: ${vehicle.availability ? "Yes" : "No"}`}
           </option>
         ))}
       </select>
@@ -227,6 +228,7 @@ const CreateBooking = () => {
       <select
         value={selectedDriver}
         onChange={(e) => setSelectedDriver(e.target.value)}
+        className="select-dropdown"
       >
         <option value="">Select a driver</option>
         {drivers.map((driver) => (
@@ -236,26 +238,23 @@ const CreateBooking = () => {
         ))}
       </select>
 
-      <br />
-      <br />
       <input
         type="number"
         placeholder="Enter distance in kilometers"
         value={distance}
         onChange={(e) => setDistance(e.target.value)}
-        style={{ width: "300px", height: "40px", marginBottom: "20px" }}
+        className="distance-input"
       />
 
-      <button onClick={handleBookingSubmit} disabled={loadingVehicles}>
+      <button
+        onClick={handleBookingSubmit}
+        disabled={loadingVehicles}
+        className="submit-button"
+      >
         {loadingVehicles ? "Loading vehicles..." : "Submit Booking"}
       </button>
 
-      {/* Display price once booking is confirmed */}
-      {price && (
-        <div style={{ marginTop: "20px", fontWeight: "bold" }}>
-          Price: ₹{price}
-        </div>
-      )}
+      {price && <div className="price-display">Price: ₹{price}</div>}
     </div>
   );
 };

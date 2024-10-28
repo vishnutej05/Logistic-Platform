@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useLoadScript } from "@react-google-maps/api";
-import axios from "axios";
+import site from "../common/API";
 import "./DriverLocation.css";
 
 const socket = io("http://localhost:5000"); // Replace with actual backend address
@@ -25,15 +25,12 @@ const DriverLocation = () => {
     // Fetch driver details
     const fetchDriverDetails = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/driver/details",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        const response = await site.get("/api/driver/details", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
 
         setDriverName(response.data.name); // Set driver's name
       } catch (error) {

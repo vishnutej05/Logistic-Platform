@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../common/API";
+import site from "../common/API";
 import { useNavigate } from "react-router-dom";
 // import "./DriverRides.css";
 
@@ -17,7 +17,7 @@ const DriverDashboard = () => {
   // Fetch available bookings
   const fetchAvailableBookings = async () => {
     try {
-      const { data } = await axios.get("/driver/available-bookings", {
+      const { data } = await site.get("/api/driver/available-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setBookings(data);
@@ -33,13 +33,15 @@ const DriverDashboard = () => {
   // Fetch current booking details after accepting
   const fetchCurrentBooking = async () => {
     try {
-      const { data } = await axios.get("/driver/current-bookings", {
+      const { data } = await site.get("/api/driver/current-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      // console.log(data[0].distance);
+      // console.log(data[0].pickupLocation.coordinates);
 
       const details = {
         pickupAddress: data[0].pickupLocation.address,
+        pickupCords: data[0].pickupLocation.coordinates,
+        dropoffCords: data[0].dropoffLocation.coordinates,
         dropoffAddress: data[0].dropoffLocation.address,
         distance: data[0].distance,
         price: data[0].price,
@@ -64,7 +66,7 @@ const DriverDashboard = () => {
   // Handle accepting a booking
   const handleAcceptBooking = async (bookingId) => {
     try {
-      const { status } = await axios.post(
+      const { status } = await site.post(
         `/driver/accept-booking/${bookingId}`,
         {},
         {
@@ -80,8 +82,11 @@ const DriverDashboard = () => {
     }
   };
 
-  const handleViewDetails = () => {
-    navigate("/track-driver"); //Create a maps where the driver can see the destination address
+  const handleViewDetails = (pickupAddress, dropoffAddress) => {
+    console.log(pickupAddress, dropoffAddress);
+    navigate("/deliveryLocation", {
+      state: { pickupAddress, dropoffAddress },
+    });
   };
 
   useEffect(() => {
@@ -89,7 +94,14 @@ const DriverDashboard = () => {
   }, []);
 
   if (currentBooking) {
-    const { pickupAddress, dropoffAddress, price, distance } = currentBooking;
+    const {
+      pickupAddress,
+      dropoffAddress,
+      price,
+      distance,
+      pickupCords,
+      dropoffCords,
+    } = currentBooking;
     // console.log("Current Booking", currentBooking);
     return (
       <div className="current-booking">
@@ -98,7 +110,10 @@ const DriverDashboard = () => {
         <p>Dropoff: {dropoffAddress || "Not available"}</p>
         <p>Distance: {distance} km</p>
         <p>Price: ₹{price}</p>
-        <button onClick={handleViewDetails}>View Details</button>
+        <button onClick={() => handleViewDetails(pickupCords, dropoffCords)}>
+          View Details
+        </button>
+
         {/* when clicked on this it should redirect to maps and should shot destination on maps and style this buytton */}
       </div>
     );

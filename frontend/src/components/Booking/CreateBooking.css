@@ -1,0 +1,86 @@
+/* General container styling */
+.create-booking-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Heading styling */
+  .create-booking-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  /* Autocomplete input fields styling */
+  .autocomplete-input {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Select dropdown styling */
+  .select-dropdown {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  /* Distance input styling */
+  .distance-input {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Submit button styling */
+  .submit-button {
+    width: 100%;
+    height: 40px;
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #45a049;
+  }
+  
+  /* Price display styling */
+  .price-display {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+  }
+  
