@@ -2,6 +2,8 @@ const express = require("express");
 const {
   createBooking,
   getUserBookings,
+  currentBooking,
+  getAvailableBookings,
 } = require("../controllers/bookingController");
 
 const router = express.Router();
@@ -11,5 +13,11 @@ router.post("/", createBooking);
 
 // Get all bookings for a user
 router.get("/", getUserBookings);
+
+//to show current bookings
+router.get("/current-bookings/", currentBooking);
+
+//to show available bookings for drivers
+router.get("/available-bookings", getAvailableBookings);
 
 module.exports = router;

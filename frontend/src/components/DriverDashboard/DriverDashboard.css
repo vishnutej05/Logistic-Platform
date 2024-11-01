@@ -20,7 +20,7 @@ body{
 .driver-location {
   width: 100%;
   max-width: 600px; /* Adjust max width */
-  height: 180px;
+  height: 200px;
   background-color: white;
   padding: 15px;
   border-radius: 8px;

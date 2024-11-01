@@ -1,136 +1,86 @@
-/* UserDashboard.css */
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif; /* Using a clean sans-serif font */
-  background-color: #f4f4f4; /* Light background for contrast */
-}
-
 .dashboard-container {
   padding: 20px;
-  max-width: 1200px; /* Maximum width for better readability */
-  margin: auto; /* Center the dashboard */
-  background: white; /* White background for the dashboard */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 1200px;
+  margin: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .head {
-  text-align: center; /* Center the main heading */
-  color: #333; /* Dark text color */
-  margin-bottom: 20px; /* Space below the heading */
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 40px; /* Increased space between sections */
 }
 
 h2 {
-  color: #555; /* Slightly lighter color for subheading */
-  margin-bottom: 15px; /* Space below the subheading */
-  border-bottom: 2px solid #007bff; /* Underline effect */
-  padding-bottom: 5px; /* Space between text and underline */
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+  margin-bottom: 15px; /* Reduced margin to create a cleaner look */
+}
+
+h3 {
+  color: #000000;
+  border-bottom: 2px solid #000000;
+  max-width: 13%;
+  padding-bottom: 3px;
+  margin-bottom: 15px; /* Adjusted margin for better spacing */
 }
 
 .bookings-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; /* Space between cards */
-  margin-top: 10px; /* Space above the bookings section */
+  gap: 20px;
 }
 
 .booking-card {
-  background-color: #ffffff; /* White background for cards */
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-  padding: 20px; /* Inner padding */
-  flex: 1 1 calc(30% - 20px); /* Flexbox for responsiveness, allowing three cards in a row */
-  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition effects */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  flex: 1 1 calc(30% - 20px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s; /* Adding a hover effect */
 }
 
 .booking-card:hover {
-  transform: translateY(-5px); /* Slightly lift the card on hover */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  transform: translateY(-5px); /* Slight lift on hover */
 }
 
-.create-booking-button {
-  display: flex;               /* Use flexbox for centering */
-  justify-content: center;     /* Center horizontally */
-  align-items: center;         /* Center vertically */
-  flex-direction: column;      /* Stack elements vertically if needed */
+.booking-detail {
+  margin-bottom: 15px; /* Spacing between detail sections */
 }
 
-.create-booking-button button {
-  width: 150px;                /* Optional: Set a fixed width for the button */
-}
-
-
-.button {
-  --main-focus: #007bff; /* A vibrant blue for primary actions */
-  --font-color: #ffffff; /* White for better contrast on dark backgrounds */
-  --bg-color-sub: #2c2f33; /* A dark gray for secondary backgrounds */
-  --bg-color: #23272a; /* A slightly lighter shade for the main background */
-  --main-color: #61dafb; /* A soft blue for highlights and borders */
-  position: relative;
-  width: 150px; /* Button width */
-  height: 40px; /* Button height */
+.track-btn,
+.create-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+.track-btn:hover,
+.create-btn:hover {
+  background-color: #0056b3;
+}
+
+.new-booking-button {
   display: flex;
-  align-items: center;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
-  background-color: var(--bg-color);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: all 0.3s; /* Smooth transition for button effects */
-}
-
-.button, .button__icon, .button__text {
-  transition: all 0.3s;
-}
-
-.button .button__text {
-  transform: translateX(25px);
-  color: var(--font-color);
-  font-weight: 600;
-}
-
-.button .button__icon {
-  position: absolute;
-  transform: translateX(109px);
-  height: 100%;
-  width: 39px;
-  background-color: var(--bg-color-sub);
-  display: flex;
-  align-items: center;
   justify-content: center;
+  margin-top: 30px; /* Increased space for better visibility */
 }
 
-.button .svg {
-  width: 20px;
-  stroke: var(--main-color);
-}
-
-.button:hover {
-  background: var(--bg-color);
-}
-
-.button:hover .button__text {
-  color: transparent;
-}
-
-.button:hover .button__icon {
-  width: 148px;
-  transform: translateX(0);
-}
-
-.button:active {
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px var(--main-color);
-}
-
-p {
-  margin: 5px 0; /* Space above and below paragraphs */
-  color: #666; /* Light gray color for text */
-  line-height: 1.5; /* Increase line height for readability */
-}
-
-strong {
-  color: #333; /* Dark color for strong text */
+.delivered-message {
+  color: #007bff !important;
+  font-weight: bold;
+  margin-top: 10px; /* Added margin for spacing */
 }

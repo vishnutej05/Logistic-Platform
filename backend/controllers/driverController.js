@@ -63,89 +63,15 @@ const driversList = async (req, res) => {
   }
 };
 
-const getAvailableBookings = async (req, res) => {
-  try {
-    const driverUserId = req.userId; // Get user ID from the auth middleware
-
-    // Check if the user's role is 'driver'
-    if (req.role !== "driver") {
-      return res
-        .status(403)
-        .json({ message: "Access denied. Only drivers are allowed." });
-    }
-
-    // Find the driver associated with the user ID
-    const driver = await Driver.findOne({ user: driverUserId });
-
-    if (!driver) {
-      return res.status(404).json({ message: "Driver not found." });
-    }
-
-    const driverId = driver._id; // Extract the driver's ID
-
-    // Fetch pending bookings for the specific driver
-    const bookings = await Booking.find({
-      driver: driverId,
-      status: "pending", // Only fetch pending bookings
-    });
-
-    if (!bookings.length) {
-      return res.status(404).json({ message: "No available bookings." });
-    }
-
-    res.status(200).json(bookings);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching bookings", error: error.message });
-  }
-};
-
-const currentBooking = async (req, res) => {
-  try {
-    const driverUserId = req.userId; // Get user ID from the auth middleware
-
-    // Find the driver associated with the user ID
-    const driver = await Driver.findOne({ user: driverUserId });
-
-    if (!driver) {
-      return res.status(404).json({ message: "Driver not found." });
-    }
-    const driverId = driver._id; // Extract the driver's ID
-
-    console.log(driverId);
-
-    // Fetch in-progress bookings for the specific driver
-    const booking = await Booking.find({
-      driver: driverId,
-      status: "in-progress", // Fetch only in-progress bookings
-    });
-
-    console.log(driverId, booking);
-
-    if (!booking.length) {
-      return res.status(404).json({ message: "No in-progress bookings." });
-    }
-
-    res.status(200).json(booking); // Return the in-progress booking(s)
-  } catch (error) {
-    console.error("Error fetching current booking:", error);
-    res.status(500).json({ error: "Error fetching current booking" });
-  }
-};
-
 // Driver accepts booking
 const acceptBooking = async (req, res) => {
   try {
-    const { bookingId } = req.params;
-    const driverId = req.userId; // Extract driverId from the request (through middleware)
-
     if (req.role !== "driver") {
       return res
         .status(403)
         .json({ message: "Access denied. Only drivers can accept booking." });
     }
-
+    const { bookingId } = req.params;
     // Check if booking is still available
     const booking = await Booking.findById(bookingId);
     if (!booking || booking.status !== "pending") {
@@ -157,6 +83,7 @@ const acceptBooking = async (req, res) => {
 
     // Mark booking as in-progress and assign driver
     booking.status = "in-progress";
+    booking.updates = "Accepted";
     // booking.driver = driverId;
     await booking.save();
 
@@ -181,11 +108,72 @@ const driverDetails = async (req, res) => {
   }
 };
 
+const startRide = async (req, res) => {
+  try {
+    if (req.role !== "driver") {
+      return res.status(403).json({
+        message: "Access denied. Only drivers can change booking updates.",
+      });
+    }
+
+    const { bookingId } = req.params;
+
+    console.log(bookingId);
+    const booking = await Booking.findById(bookingId);
+    if (!booking || booking.updates === "Started") {
+      return res.status(400).json("Ride has already started");
+    }
+
+    booking.updates = "Started";
+    booking.status = "in-progress";
+    await booking.save();
+    res.status(200).json("Ride has started");
+  } catch (error) {
+    console.error("Error fetching booking details:", error);
+    return res.status(500).json({ error: "Failed to change booking updates." });
+  }
+};
+
+const endRide = async (req, res) => {
+  try {
+    const driverUserId = req.userId;
+    // console.log("Driver Id ", driverUserId);
+
+    if (req.role !== "driver") {
+      return res.status(403).json({
+        message: "Access denied. Only drivers can change booking updates.",
+      });
+    }
+
+    const { bookingId } = req.params;
+
+    const driver = await Driver.find({ user: driverUserId });
+    if (!driver) {
+      return res.status(400).json({ message: "Driver not found." });
+    }
+    driver[0].level++;
+    // console.log("Driver ", driver[0].level);
+    // console.log(bookingId);
+    const booking = await Booking.findById(bookingId);
+    if (!booking || booking.updates === "Delivered") {
+      return res.status(400).json("Ride has already Ended");
+    }
+
+    booking.updates = "Delivered";
+    booking.status = "completed";
+    await booking.save();
+    res.status(200).json("Ride has ended");
+  } catch (error) {
+    console.error("Error fetching booking details:", error);
+    return res.status(500).json({ error: "Failed to change booking updates." });
+  }
+};
+
 module.exports = {
   createDriver,
   driversList,
-  getAvailableBookings,
   acceptBooking,
-  currentBooking,
   driverDetails,
+  startRide,
+  endRide,
 };

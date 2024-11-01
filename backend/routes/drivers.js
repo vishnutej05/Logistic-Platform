@@ -2,10 +2,10 @@ const express = require("express");
 const {
   createDriver,
   driversList,
-  getAvailableBookings,
   acceptBooking,
-  currentBooking,
   driverDetails,
+  startRide,
+  endRide,
 } = require("../controllers/driverController");
 const router = express.Router();
 
@@ -15,14 +15,14 @@ router.post("/create", createDriver);
 //list of drivers
 router.get("/", driversList);
 
-//to show available bookings for drivers
-router.get("/available-bookings", getAvailableBookings);
-
 //to accept bookings
 router.post("/accept-booking/:bookingId", acceptBooking);
 
-//to show current bookings
-router.get("/current-bookings/", currentBooking);
+//to start the ride
+router.post("/start-ride/:bookingId", startRide);
+
+//to end the ride
+router.post("/end-ride/:bookingId", endRide);
 
 router.get("/details", driverDetails);
 

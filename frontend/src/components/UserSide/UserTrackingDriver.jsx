@@ -1,5 +1,5 @@
 // src/components/UserTracking.js
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import {
   GoogleMap,
@@ -7,6 +7,7 @@ import {
   Polyline,
   useLoadScript,
 } from "@react-google-maps/api";
+import AppContext from "../../context/AppContext";
 
 const socket = io("http://localhost:5000"); // Replace with your server address
 
@@ -29,6 +30,7 @@ const polylineOptions = {
 const UserTracking = () => {
   const [driverLocation, setDriverLocation] = useState(null); // Current driver location
   const [path, setPath] = useState([]); // Path for the Polyline
+  const { booking } = useContext(AppContext);
 
   // Load Google Maps script
   const { isLoaded } = useLoadScript({
@@ -63,6 +65,19 @@ const UserTracking = () => {
 
   return (
     <>
+      <h2>Tracking Driver for Booking</h2>
+      <p>
+        <strong>Pickup:</strong>
+        {!booking ? "Unable to fetch now" : booking.pickupLocation.address}
+      </p>
+      <p>
+        <strong>Dropoff:</strong>
+        {!booking ? "Unable to fetch now" : booking.dropoffLocation.address}
+      </p>
+      <p>
+        <strong>Driver:</strong>
+        {!booking ? "Unable to fetch now" : booking.driver.name}
+      </p>
       <h1>You are now tracking drivers movement</h1>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}

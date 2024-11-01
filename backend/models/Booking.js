@@ -32,6 +32,11 @@ const bookingSchema = new mongoose.Schema(
       enum: ["pending", "in-progress", "completed"],
       default: "pending",
     },
+    updates: {
+      type: String,
+      enum: ["Not-Accepted", "Accepted", "Started", "Delivered"],
+      default: "Not-Accepted",
+    },
     price: { type: Number, required: true },
     distance: { type: Number, required: true }, // distance in km
   },

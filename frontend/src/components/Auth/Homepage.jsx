@@ -9,16 +9,18 @@ export default function Homepage() {
       <Link to="/login">Login Page</Link>
       <br />
       <br />
-      <Link to="/booking">Create Booking</Link>
-      <br />
-      <br />
-      <Link to="/dashboard">Dashboard Page</Link>
+      <Link to="/user-dashboard">User Dashboard</Link>
       <br />
       <br />
       <Link to="/driver-dashboard">Driver Dashboard</Link>
       <br />
       <br />
       <Link to="/track-driver">Track Driver</Link>
+      <br />
+      <br />
+      <Link to="/deliveryLocation">Delivery Location</Link>
+      <br />
+      <br />
     </div>
   );
 }

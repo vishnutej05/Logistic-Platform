@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 const DriverDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [currentBooking, setCurrentBooking] = useState(null); // To store current booking details
+  const [rideCompleted, setRideCompleted] = useState(false); // State to track if ride is completed
   const navigate = useNavigate();
+
   // Function to get the JWT token from cookies
   const getToken = () =>
     document.cookie
@@ -17,7 +19,7 @@ const DriverDashboard = () => {
   // Fetch available bookings
   const fetchAvailableBookings = async () => {
     try {
-      const { data } = await site.get("/api/driver/available-bookings", {
+      const { data } = await site.get("/api/bookings/available-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setBookings(data);
@@ -33,10 +35,10 @@ const DriverDashboard = () => {
   // Fetch current booking details after accepting
   const fetchCurrentBooking = async () => {
     try {
-      const { data } = await site.get("/api/driver/current-bookings", {
+      const { data } = await site.get("/api/bookings/current-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      // console.log(data[0].pickupLocation.coordinates);
+      // console.log(data[0]);
 
       const details = {
         pickupAddress: data[0].pickupLocation.address,
@@ -45,9 +47,16 @@ const DriverDashboard = () => {
         dropoffAddress: data[0].dropoffLocation.address,
         distance: data[0].distance,
         price: data[0].price,
+        createdAt: data[0].createdAt,
+        id: data[0]._id,
+        updates: data[0].updates,
       };
 
-      // console.log("These are my details of current booking", details);
+      // Check if ride is completed
+      if (details.updates === "Delivered") {
+        setRideCompleted(true); // Set ride completed status
+      }
+
       setCurrentBooking(details); // Store the current booking details
     } catch (error) {
       if (error.response?.status === 404) {
@@ -67,7 +76,7 @@ const DriverDashboard = () => {
   const handleAcceptBooking = async (bookingId) => {
     try {
       const { status } = await site.post(
-        `/driver/accept-booking/${bookingId}`,
+        `api/driver/accept-booking/${bookingId}`,
         {},
         {
           headers: { Authorization: `Bearer ${getToken()}` },
@@ -82,10 +91,10 @@ const DriverDashboard = () => {
     }
   };
 
-  const handleViewDetails = (pickupAddress, dropoffAddress) => {
-    console.log(pickupAddress, dropoffAddress);
+  const handleViewDetails = (booking) => {
+    // console.log("when clicked on view details", booking);
     navigate("/deliveryLocation", {
-      state: { pickupAddress, dropoffAddress },
+      state: { booking },
     });
   };
 
@@ -93,16 +102,18 @@ const DriverDashboard = () => {
     fetchCurrentBooking(); // Always attempt to get current booking first
   }, []);
 
+  // Render congratulatory card if the ride is completed
+  if (rideCompleted) {
+    return (
+      <div className="completed-ride-card">
+        <h2>Congratulations!</h2>
+        <p>You have completed this ride. Thank you for delivering the goods!</p>
+      </div>
+    );
+  }
+
   if (currentBooking) {
-    const {
-      pickupAddress,
-      dropoffAddress,
-      price,
-      distance,
-      pickupCords,
-      dropoffCords,
-    } = currentBooking;
-    // console.log("Current Booking", currentBooking);
+    const { pickupAddress, dropoffAddress, price, distance } = currentBooking;
     return (
       <div className="current-booking">
         <h2>Current Booking</h2>
@@ -110,11 +121,9 @@ const DriverDashboard = () => {
         <p>Dropoff: {dropoffAddress || "Not available"}</p>
         <p>Distance: {distance} km</p>
         <p>Price: ₹{price}</p>
-        <button onClick={() => handleViewDetails(pickupCords, dropoffCords)}>
+        <button onClick={() => handleViewDetails(currentBooking)}>
           View Details
         </button>
-
-        {/* when clicked on this it should redirect to maps and should shot destination on maps and style this buytton */}
       </div>
     );
   }
@@ -132,7 +141,7 @@ const DriverDashboard = () => {
             <p>Pickup: {booking.pickupLocation?.address || "Not available"}</p>
             <p>Drop: {booking.dropoffLocation?.address || "Not available"}</p>
             <p>Distance: {booking.distance} km</p>
-            <p>Price: {booking.price} </p>
+            <p>Price: {booking.price}</p>
             <button onClick={() => handleAcceptBooking(booking._id)}>
               Accept
             </button>

@@ -10,7 +10,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await site.post("/auth/login", { email, password });
+      const { data } = await site.post("/api/auth/login", { email, password });
       const now = new Date();
       now.setTime(now.getTime() + 2 * 24 * 60 * 60 * 1000); // 2 days in milliseconds
       const expires = `expires=${now.toUTCString()}`;
