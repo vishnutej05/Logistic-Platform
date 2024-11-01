@@ -56,12 +56,12 @@ export default function UserDashboard() {
 
   return (
     <div className="dashboard-container">
-      <h1 className="head">User Dashboard</h1>
+      <h1 className="dashboard-title">User Dashboard</h1>
 
-      <div className="section">
+      <section className="section">
         <h2>Current Bookings</h2>
         {loading ? (
-          <p>Loading bookings...</p>
+          <p className="loading-text">Loading bookings...</p>
         ) : currentBookings.length > 0 ? (
           <div className="bookings-container">
             {currentBookings.map((booking) => (
@@ -75,7 +75,7 @@ export default function UserDashboard() {
                     <strong>Dropoff:</strong> {booking.dropoffLocation.address}
                   </p>
                   <p>
-                    <strong>Distance:</strong> {booking.distance}
+                    <strong>Distance:</strong> {booking.distance} km
                   </p>
                   <p>
                     <strong>Driver:</strong> {booking.driver.name}
@@ -97,11 +97,11 @@ export default function UserDashboard() {
             ))}
           </div>
         ) : (
-          <p>No current bookings available</p>
+          <p className="no-bookings-text">No current bookings available</p>
         )}
-      </div>
+      </section>
 
-      <div className="section">
+      <section className="section">
         <h2>Previous Bookings</h2>
         {previousBookings.length > 0 ? (
           <div className="bookings-container">
@@ -116,16 +116,16 @@ export default function UserDashboard() {
                     <strong>Dropoff:</strong> {booking.dropoffLocation.address}
                   </p>
                   <p className="delivered-message">
-                    Item delivered. Please pay ₹{booking.price} to the admin.
+                    Delivered. Please pay ₹{booking.price} to the admin.
                   </p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p>No previous bookings available</p>
+          <p className="no-bookings-text">No previous bookings available</p>
         )}
-      </div>
+      </section>
 
       <div className="new-booking-button">
         <button className="create-btn" onClick={handleCreateBooking}>

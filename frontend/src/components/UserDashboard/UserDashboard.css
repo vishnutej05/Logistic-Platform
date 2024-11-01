@@ -1,10 +1,12 @@
+/* UserDashboard.css */
+
 .dashboard-container {
   padding: 20px;
   max-width: 1200px;
   margin: auto;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .head {
@@ -21,39 +23,40 @@ h2 {
   color: #007bff;
   border-bottom: 2px solid #007bff;
   padding-bottom: 5px;
-  margin-bottom: 15px; /* Reduced margin to create a cleaner look */
+  margin-bottom: 18px; /* Reduced margin for a cleaner look */
 }
 
 h3 {
   color: #000000;
   border-bottom: 2px solid #000000;
-  max-width: 13%;
+  max-width: 150px;
   padding-bottom: 3px;
-  margin-bottom: 15px; /* Adjusted margin for better spacing */
+  margin-bottom: 25px; /* Adjusted margin for better spacing */
 }
 
 .bookings-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 20px; /* Space between booking cards */
 }
 
-.booking-card {
+.dashboard-container .booking-card {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  flex: 1 1 calc(30% - 20px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s; /* Adding a hover effect */
+  flex: 1 1 calc(30% - 20px); /* Ensure the cards are responsive */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s; /* Adding a hover effect */
 }
 
-.booking-card:hover {
+.dashboard-container .booking-card:hover {
   transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
 
-.booking-detail {
-  margin-bottom: 15px; /* Spacing between detail sections */
+.dashboard-container .booking-detail {
+  padding-bottom: 15px; /* Spacing between detail sections */
 }
 
 .track-btn,
@@ -65,12 +68,13 @@ h3 {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s; /* Adding a transform effect */
 }
 
 .track-btn:hover,
 .create-btn:hover {
   background-color: #0056b3;
+  transform: translateY(-2px); /* Lift effect on button hover */
 }
 
 .new-booking-button {
@@ -83,4 +87,6 @@ h3 {
   color: #007bff !important;
   font-weight: bold;
   margin-top: 10px; /* Added margin for spacing */
+  padding: 10px 0; /* Additional padding for better visibility */
+  border-top: 1px solid #ddd; /* Optional: visual separation */
 }
