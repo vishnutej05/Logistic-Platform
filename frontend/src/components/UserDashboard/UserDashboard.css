@@ -2,36 +2,38 @@
 
 .dashboard-container {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: auto;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.head {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+.dashboard-title {
+  font-size: 2.4rem; /* Larger font size for emphasis */
+  color: #333; /* Dark color for better readability */
+  margin-bottom: 20px; /* Space below the title */
+  text-align: center; /* Center align the title */
 }
 
 .section {
   margin-bottom: 40px; /* Increased space between sections */
+  padding:20px;
+  border: 2px solid #ddd;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
-h2 {
+.headings {
   color: #007bff;
   border-bottom: 2px solid #007bff;
   padding-bottom: 5px;
   margin-bottom: 18px; /* Reduced margin for a cleaner look */
 }
 
-h3 {
+.subHeadings {
   color: #000000;
   border-bottom: 2px solid #000000;
   max-width: 150px;
-  padding-bottom: 3px;
-  margin-bottom: 25px; /* Adjusted margin for better spacing */
 }
 
 .bookings-container {
@@ -55,8 +57,9 @@ h3 {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
 
-.dashboard-container .booking-detail {
-  padding-bottom: 15px; /* Spacing between detail sections */
+.booking-detail {
+  padding: 15px;
+  /* font-size: 20px; */
 }
 
 .track-btn,

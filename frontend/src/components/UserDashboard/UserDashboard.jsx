@@ -18,6 +18,10 @@ export default function UserDashboard() {
     return tokenString ? tokenString.split("=")[1] : null;
   };
 
+  const redirect = () => {
+    alert("The admin will be notified of the payment (Should Integrate)");
+  };
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -59,14 +63,51 @@ export default function UserDashboard() {
       <h1 className="dashboard-title">User Dashboard</h1>
 
       <section className="section">
-        <h2>Current Bookings</h2>
+        <h2 className="headings">Previous Bookings</h2>
+        {previousBookings.length > 0 ? (
+          <div className="bookings-container">
+            {previousBookings.map((booking) => (
+              <div className="booking-card" key={booking._id}>
+                <h3 className="subHeadings">Booking Details</h3>
+                <div className="booking-detail">
+                  <p>
+                    <strong>Pickup:</strong> {booking.pickupLocation.address}
+                  </p>
+                  <p>
+                    <strong>Dropoff:</strong> {booking.dropoffLocation.address}
+                  </p>
+                  <p>
+                    <strong>Booking Time:</strong>{" "}
+                    {new Date(booking.createdAt).toLocaleString("en-IN", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                  {console.log(booking)}
+                  <p className="delivered-message">
+                    Delivered. Please pay ₹{booking.price} to the admin.
+                  </p>
+                  <button className="create-btn" onClick={redirect}>
+                    Pay Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="no-bookings-text">No previous bookings available</p>
+        )}
+      </section>
+
+      <section className="section">
+        <h2 className="headings">Current Bookings</h2>
         {loading ? (
           <p className="loading-text">Loading bookings...</p>
         ) : currentBookings.length > 0 ? (
           <div className="bookings-container">
             {currentBookings.map((booking) => (
               <div className="booking-card" key={booking._id}>
-                <h3>Booking Details</h3>
+                <h3 className="subHeadings">Booking Details</h3>
                 <div className="booking-detail">
                   <p>
                     <strong>Pickup:</strong> {booking.pickupLocation.address}
@@ -78,13 +119,47 @@ export default function UserDashboard() {
                     <strong>Distance:</strong> {booking.distance} km
                   </p>
                   <p>
-                    <strong>Driver:</strong> {booking.driver.name}
-                  </p>
-                  <p>
                     <strong>Price:</strong> ₹{booking.price}
                   </p>
                   <p>
+                    <strong>Booking Time:</strong>{" "}
+                    {new Date(booking.createdAt).toLocaleString("en-IN", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                </div>
+                <h3 className="subHeadings">Rider Details</h3>
+                <div className="booking-detail">
+                  <p>
+                    <strong>Driver:</strong> {booking.driver.name}
+                  </p>
+                  <p>
                     <strong>Driver Updates:</strong> {booking.updates}
+                  </p>
+                  <p>
+                    <strong>Driver Number:</strong> {booking.driver.phone}
+                  </p>
+                  <p>
+                    <strong>Driver License Number:</strong>
+                    {booking.driver.licenseNumber}
+                  </p>
+                </div>
+                <h3 className="subHeadings">Vehicle Details</h3>
+                <div className="booking-detail">
+                  <p>
+                    <strong>Vehicle type:</strong> {booking.vehicle.type}
+                  </p>
+                  <p>
+                    <strong>Vehicle Model:</strong> {booking.vehicle.model}
+                  </p>
+                  <p>
+                    <strong>Vehicle Capacity:</strong>{" "}
+                    {booking.vehicle.capacity}
+                  </p>
+                  <p>
+                    <strong>Vehicle Number:</strong>{" "}
+                    {booking.vehicle.plateNumber}
                   </p>
                 </div>
                 <button
@@ -98,32 +173,6 @@ export default function UserDashboard() {
           </div>
         ) : (
           <p className="no-bookings-text">No current bookings available</p>
-        )}
-      </section>
-
-      <section className="section">
-        <h2>Previous Bookings</h2>
-        {previousBookings.length > 0 ? (
-          <div className="bookings-container">
-            {previousBookings.map((booking) => (
-              <div className="booking-card" key={booking._id}>
-                <h3>Booking Details</h3>
-                <div className="booking-detail">
-                  <p>
-                    <strong>Pickup:</strong> {booking.pickupLocation.address}
-                  </p>
-                  <p>
-                    <strong>Dropoff:</strong> {booking.dropoffLocation.address}
-                  </p>
-                  <p className="delivered-message">
-                    Delivered. Please pay ₹{booking.price} to the admin.
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="no-bookings-text">No previous bookings available</p>
         )}
       </section>
 

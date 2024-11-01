@@ -8,11 +8,12 @@ import {
   useLoadScript,
 } from "@react-google-maps/api";
 import AppContext from "../../context/AppContext";
+import "./UserTracking.css";
 
 const socket = io("http://localhost:5000"); // Replace with your server address
 
 const mapContainerStyle = {
-  width: "100vw",
+  width: "85vw",
   height: "100vh",
 };
 
@@ -64,8 +65,8 @@ const UserTracking = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-    <>
-      <h2>Tracking Driver for Booking</h2>
+    <div className="container">
+      <h2 className="headings">Tracking Driver for Booking</h2>
       <p>
         <strong>Pickup:</strong>
         {!booking ? "Unable to fetch now" : booking.pickupLocation.address}
@@ -78,7 +79,7 @@ const UserTracking = () => {
         <strong>Driver:</strong>
         {!booking ? "Unable to fetch now" : booking.driver.name}
       </p>
-      <h1>You are now tracking drivers movement</h1>
+      <h2 className="headings">You are now tracking drivers movement</h2>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={14}
@@ -93,7 +94,7 @@ const UserTracking = () => {
         {/* Polyline to track the driver's movement */}
         {path.length > 1 && <Polyline path={path} options={polylineOptions} />}
       </GoogleMap>
-    </>
+    </div>
   );
 };
 

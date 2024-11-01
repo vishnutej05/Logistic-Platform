@@ -3,14 +3,15 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DeliveryLocation from "./components/DeliveryLocation/DeliveryLocation";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
-import CreateBooking from "./components/UserSide/CreateBooking";
+import CreateBooking from "./components/Booking/CreateBooking";
 import LoginForm from "./components/Auth/LoginForm";
 // import DriverRides from "./components/DriverSideDetails/DriverRides"; // Import the DriverDashboard
 import Homepage from "./components/Auth/Homepage"; // Import the Homepage component
-import UserTracking from "./components/UserSide/UserTrackingDriver";
+import UserTracking from "./components/UserTracking/UserTrackingDriver";
 import DriverDashboard from "./components/DriverDashboard/DriverDashboard";
 import { AppProvider } from "./context/AppContext";
 
+import "./App.css";
 function App() {
   return (
     <AppProvider>

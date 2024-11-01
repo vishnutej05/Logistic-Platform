@@ -1,0 +1,112 @@
+.booking-container {
+  padding: 30px;
+  max-width: 1200px; /* Adjusted for better layout */
+  margin: 0px auto; 
+  background: #f9f9f9; /* Light background for contrast */
+  border-radius: 12px; /* Slightly larger border radius */
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+}
+
+.head{
+  color: #007bff;
+}
+
+.booking-title {
+  font-size: 2.5rem; /* Increased title size for emphasis */
+  color: #333; /* Dark color for readability */
+  margin-bottom: 25px; /* Increased space below the title */
+  border-bottom: 2px solid #333;
+}
+
+.title{
+  display: flex;
+  justify-content: center;
+}
+
+.input-label {
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
+  margin-bottom: 18px; /* Reduced margin for a cleaner look */
+  font-weight: bold; /* Make labels bold */
+  color: #333; /* Primary color for labels */
+  font-size: 1.3rem; /* Slightly larger font for labels */
+}
+
+.autocomplete-input {
+  width: 98%; /* Full width */
+  padding: 12px; /* Increased padding for comfort */
+  border: 1px solid #ccc; /* Soft border color */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 30px; /* Space below inputs */
+  font-size: 1rem; /* Font size for input text */
+}
+
+.options-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap */
+  gap: 15px; /* Space between cards */
+  margin-bottom: 30px; /* Space below the options */
+  margin-top: 20px;
+}
+
+.card {
+  flex: 1 1 calc(30% - 15px); /* Responsive card sizing */
+  border: 1px solid #ddd; /* Card border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Inner padding */
+  cursor: pointer; /* Pointer cursor */
+  transition: transform 0.2s, box-shadow 0.2s; /* Transition for effects */
+  text-align: center; /* Center align text */
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card.selected {
+  border-color: #007bff; /* Highlight selected card */
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3); /* Elevate selected card */
+}
+
+.card:hover {
+  transform: translateY(-3px); /* Lift effect on hover */
+}
+
+input{
+  width: 98%; /* Full width */
+  height:32px;
+  padding: 12px; /* Increased padding for comfort */
+  border: 1px solid #ccc; /* Soft border color */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 10px; /* Space below input */
+  margin-top:10px;
+  font-size: 1rem; /* Font size for input text */
+}
+
+.submit-button {
+  background-color: #007bff; /* Primary button color */
+  color: #fff; /* Text color */
+  padding: 12px 25px;
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 1.2rem; /* Larger font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background 0.3s, transform 0.2s; /* Transition for effects */
+  margin-top: 20px;
+  width: 50%; /* Full width for button */
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
+}
+
+.price-display {
+  font-size: 1.8rem; /* Larger font for price display */
+  color: #007bff; /* Match the primary color */
+  margin-top: 25px; /* Space above price display */
+  text-align: center; /* Center align price */
+}
+
+.button-section{
+  display: flex;
+  justify-content: center;
+}

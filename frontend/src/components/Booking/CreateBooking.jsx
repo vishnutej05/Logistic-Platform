@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import site from "../common/API";
-import "./CreateBooking.css";
+import "./CreateBooking.css"; // Import the new CSS
 // import { useNavigate } from "react-router-dom";
 
 const libraries = ["places"];
@@ -166,7 +166,7 @@ const CreateBooking = () => {
       );
 
       // Set the price state with the returned price
-      //   console.log(response.data.booking.price);
+      // console.log(response.data.booking.price);
       setPrice(response.data.booking.price);
       alert(`Booking created! Booking ID: ${response.data.booking._id}`);
       // navigate("/track-driver");
@@ -179,9 +179,11 @@ const CreateBooking = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className="create-booking-container">
-      <h2>Create a Booking</h2>
-
+    <div className="booking-container">
+      <div className="title">
+        <h2 className="booking-title">Create a Booking</h2>
+      </div>
+      <label className="input-label">Pickup Adress:</label>
       <Autocomplete
         onLoad={(autocomplete) =>
           (autocompletePickupRef.current = autocomplete)
@@ -189,12 +191,13 @@ const CreateBooking = () => {
         onPlaceChanged={handlePickupPlaceChange}
       >
         <input
+          className="autocomplete-input"
           type="text"
           placeholder="Enter pickup location"
-          className="autocomplete-input"
         />
       </Autocomplete>
 
+      <label className="input-label">Dropoff Address:</label>
       <Autocomplete
         onLoad={(autocomplete) =>
           (autocompleteDropoffRef.current = autocomplete)
@@ -202,59 +205,72 @@ const CreateBooking = () => {
         onPlaceChanged={handleDropoffPlaceChange}
       >
         <input
+          className="autocomplete-input"
           type="text"
           placeholder="Enter dropoff location"
-          className="autocomplete-input"
         />
       </Autocomplete>
 
-      <label>Vehicle:</label>
-      <select
-        value={selectedVehicle}
-        onChange={(e) => setSelectedVehicle(e.target.value)}
-        className="select-dropdown"
-      >
-        <option value="">Select a vehicle</option>
+      <label className="input-label">Select Vehicle:</label>
+      <div className="options-container">
         {vehicles.map((vehicle) => (
-          <option key={vehicle._id} value={vehicle._id}>
-            {`Type: ${vehicle.type} | Model: ${vehicle.model} | Capacity: ${
-              vehicle.capacity
-            } | Available: ${vehicle.availability ? "Yes" : "No"}`}
-          </option>
+          <div
+            key={vehicle._id}
+            className={`card ${
+              selectedVehicle === vehicle._id ? "selected" : ""
+            }`}
+            onClick={() => setSelectedVehicle(vehicle._id)}
+          >
+            <h2 className="head">
+              {vehicle.model} ({vehicle.type})
+            </h2>
+            <p>Capacity: {vehicle.capacity}</p>
+            <p>Vehicle Availability: {vehicle.availability ? "Yes" : "No"}</p>
+          </div>
         ))}
-      </select>
+      </div>
 
-      <label>Driver:</label>
-      <select
-        value={selectedDriver}
-        onChange={(e) => setSelectedDriver(e.target.value)}
-        className="select-dropdown"
-      >
-        <option value="">Select a driver</option>
+      <label className="input-label">Select Driver:</label>
+      <div className="options-container">
         {drivers.map((driver) => (
-          <option key={driver._id} value={driver._id}>
-            {driver.name} ({driver.status})
-          </option>
+          <div
+            key={driver._id}
+            className={`card ${
+              selectedDriver === driver._id ? "selected" : ""
+            }`}
+            onClick={() => setSelectedDriver(driver._id)}
+          >
+            {/* {console.log(driver)} */}
+            <h2 className="head">
+              {driver.name} (Contact: {String(driver.phone).slice(2)})
+            </h2>
+            <p>Rides Completed: {driver.level} </p>
+            <p>
+              Rides Driver Availability:
+              {driver.status === "available" ? "Yes" : "No"}
+            </p>
+          </div>
         ))}
-      </select>
+      </div>
 
+      <label className="input-label">Distance (in km):</label>
       <input
         type="number"
-        placeholder="Enter distance in kilometers"
         value={distance}
         onChange={(e) => setDistance(e.target.value)}
-        className="distance-input"
       />
 
-      <button
-        onClick={handleBookingSubmit}
-        disabled={loadingVehicles}
-        className="submit-button"
-      >
-        {loadingVehicles ? "Loading vehicles..." : "Submit Booking"}
-      </button>
+      {price !== null && (
+        <div className="price-display">
+          Estimated Price: ${price.toFixed(2)}
+        </div>
+      )}
 
-      {price && <div className="price-display">Price: ₹{price}</div>}
+      <div className="button-section">
+        <button className="submit-button" onClick={handleBookingSubmit}>
+          Create Booking
+        </button>
+      </div>
     </div>
   );
 };
