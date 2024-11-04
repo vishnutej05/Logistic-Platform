@@ -7,6 +7,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import site from "../common/API.js";
+
 import "./DeliveryLocation.css"; // Import CSS for styling
 
 const getToken = () =>
@@ -42,7 +43,7 @@ const DeliveryLocation = () => {
   } = booking || {};
 
   // State to manage map visibility
-  const [isMapVisible, setIsMapVisible] = useState(true);
+  const [isMapVisible, setIsMapVisible] = useState(false); // Initialize to false
   const [isRideEnded, setIsRideEnded] = useState(false); // State to manage ride end
 
   const { isLoaded } = useLoadScript({
@@ -63,8 +64,14 @@ const DeliveryLocation = () => {
             headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
-        alert(status === 200 ? "Ride Started!" : "Ride already started!");
+        if (status === 200) {
+          alert("Ride Started!");
+          setIsMapVisible(true); // Show the map only after starting the ride
+        } else {
+          alert("Ride already started!");
+        }
       } catch (error) {
+        console.log(error);
         alert(error.response.data);
       }
     }

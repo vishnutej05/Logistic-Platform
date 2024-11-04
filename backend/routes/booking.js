@@ -4,6 +4,7 @@ const {
   getUserBookings,
   currentBooking,
   getAvailableBookings,
+  completedBookings,
 } = require("../controllers/bookingController");
 
 const router = express.Router();
@@ -19,5 +20,8 @@ router.get("/current-bookings/", currentBooking);
 
 //to show available bookings for drivers
 router.get("/available-bookings", getAvailableBookings);
+
+//to show completed bookings
+router.get("/completed-bookings", completedBookings);
 
 module.exports = router;

@@ -180,9 +180,47 @@ const currentBooking = async (req, res) => {
   }
 };
 
+const completedBookings = async (req, res) => {
+  try {
+    // Get user ID from the auth middleware
+    const driverUserId = req.userId;
+    console.log("Received request for userId:", driverUserId); // Debug log
+
+    // Find the driver associated with the user ID
+    const driver = await Driver.findOne({ user: driverUserId });
+    if (!driver) {
+      console.log("No driver found for userId:", driverUserId); // Debug log
+      return res.status(404).json({ message: "Driver not found." });
+    }
+
+    const driverId = driver._id; // Extract the driver's ID
+    // console.log("Driver found with ID:", driverId); // Debug log
+
+    const bookings = await Booking.find({
+      driver: driverId,
+      status: "completed",
+    });
+    // console.log("Completed bookings found:", bookings); 
+
+    // Check if there are no completed bookings
+    if (!bookings.length) {
+      return res.status(404).json({ message: "No completed bookings found." });
+    }
+
+    // Return the list of completed bookings
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error fetching completed bookings:", error); // Log the error
+    res
+      .status(500)
+      .json({ error: "Server error while fetching completed bookings." });
+  }
+};
+
 module.exports = {
   createBooking,
   getUserBookings,
   currentBooking,
   getAvailableBookings,
+  completedBookings,
 };

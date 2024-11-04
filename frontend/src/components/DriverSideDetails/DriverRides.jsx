@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import site from "../common/API";
 import { useNavigate } from "react-router-dom";
-// import "./DriverRides.css";
 
 const DriverDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -38,7 +37,7 @@ const DriverDashboard = () => {
       const { data } = await site.get("/api/bookings/current-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      // console.log(data[0]);
+      console.log(data[0]);
 
       const details = {
         pickupAddress: data[0].pickupLocation.address,
@@ -116,11 +115,19 @@ const DriverDashboard = () => {
     const { pickupAddress, dropoffAddress, price, distance } = currentBooking;
     return (
       <div className="current-booking">
-        <h2>Current Booking</h2>
-        <p>Pickup: {pickupAddress || "Not available"}</p>
-        <p>Dropoff: {dropoffAddress || "Not available"}</p>
-        <p>Distance: {distance} km</p>
-        <p>Price: ₹{price}</p>
+        <h2 className="bookings">Current Booking</h2>
+        <p>
+          <strong>Pickup:</strong> {pickupAddress || "Not available"}
+        </p>
+        <p>
+          <strong>Dropoff:</strong> {dropoffAddress || "Not available"}
+        </p>
+        <p>
+          <strong>Distance:</strong> {distance} km
+        </p>
+        <p>
+          <strong>Price:</strong> ₹{price}
+        </p>
         <button onClick={() => handleViewDetails(currentBooking)}>
           View Details
         </button>
@@ -131,17 +138,27 @@ const DriverDashboard = () => {
   // Render available bookings if no current booking
   return (
     <div>
-      <h2>Driver Dashboard</h2>
+      <h2 className="bookings">Booking Request</h2>
       {bookings.length === 0 ? (
         <p>No available bookings at the moment.</p>
       ) : (
         bookings.map((booking) => (
           <div key={booking._id} className="booking-card">
-            <h3>{booking.user?.name || "Unknown User"}</h3>
-            <p>Pickup: {booking.pickupLocation?.address || "Not available"}</p>
-            <p>Drop: {booking.dropoffLocation?.address || "Not available"}</p>
-            <p>Distance: {booking.distance} km</p>
-            <p>Price: {booking.price}</p>
+            {/* <p>{booking.user?.name || "Unknown User"}</p> */}
+            <p>
+              <strong>Pickup:</strong>{" "}
+              {booking.pickupLocation?.address || "Not available"}
+            </p>
+            <p>
+              <strong>Drop:</strong>{" "}
+              {booking.dropoffLocation?.address || "Not available"}
+            </p>
+            <p>
+              <strong>Distance:</strong> {booking.distance} km
+            </p>
+            <p>
+              <strong>Price:</strong> {booking.price}
+            </p>
             <button onClick={() => handleAcceptBooking(booking._id)}>
               Accept
             </button>

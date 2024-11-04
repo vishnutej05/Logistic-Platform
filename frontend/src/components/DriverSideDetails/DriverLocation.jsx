@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { io } from "socket.io-client";
+import { Tooltip, IconButton } from "@mui/material";
+import Zoom from "@mui/material/Zoom";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useLoadScript } from "@react-google-maps/api";
 import site from "../common/API";
+
 import "./DriverLocation.css";
 
 const socket = io("http://localhost:5000"); // Replace with actual backend address
@@ -33,14 +37,11 @@ const DriverLocation = () => {
             Authorization: `Bearer ${getToken()}`,
           },
         });
-
-        console.log("Driver details fetched:", data); // Log data for verification
-
-        setDriverInfo({
-          location: driverInfo.location, // Preserve location if already set
+        setDriverInfo((prevInfo) => ({
+          ...prevInfo,
           name: data.name,
           level: data.level,
-        });
+        }));
       } catch (error) {
         console.error("Error fetching driver details:", error);
       }
@@ -79,33 +80,36 @@ const DriverLocation = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-    <div className="driver-location-container">
-      <div className="info-container">
-        <h2 className="header">Driver Tracking</h2>
-        <p className="info-text">
-          <strong>Driver Name:</strong> {driverInfo.name || "Loading..."}
-        </p>
-        <p className="info-text">
-          <strong>Driver Experience:</strong>{" "}
-          {driverInfo.level !== null ? driverInfo.level : "Loading..."} Rides
-        </p>
-        <p className="info-text">
-          <strong>Current Location:</strong>{" "}
-          {driverInfo.location
-            ? `Lat: ${driverInfo.location.lat}, Lng: ${driverInfo.location.lng}`
-            : "Location unavailable"}
-        </p>
-      </div>
-
-      {/* 
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={14}
-        center={driverInfo.location || defaultCenter}
+    <div className="driver-location-tooltip-container">
+      <Tooltip
+        TransitionComponent={Zoom}
+        title={
+          <div className="driver-info-overlay">
+            <p>
+              <strong>Driver Name:</strong> {driverInfo.name || "Loading..."}
+            </p>
+            <p>
+              <strong>Driver Experience:</strong>{" "}
+              {driverInfo.level !== null ? driverInfo.level : "Loading..."}{" "}
+              Rides
+            </p>
+            <p>
+              <strong>Current Location:</strong> <br />
+              {driverInfo.location
+                ? `Lat: ${driverInfo.location.lat}, Lng: ${driverInfo.location.lng}`
+                : "Location unavailable"}
+            </p>
+          </div>
+        }
+        placement="top"
+        arrow
+        enterDelay={1}
+        leaveDelay={1}
       >
-        {driverInfo.location && <Marker position={driverInfo.location} />}
-      </GoogleMap> 
-      */}
+        <IconButton>
+          <LocationOnIcon fontSize="large" style={{ color: "#0056b3" }} />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 };
