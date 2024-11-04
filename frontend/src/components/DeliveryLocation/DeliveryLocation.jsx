@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   GoogleMap,
@@ -33,23 +33,36 @@ const DeliveryLocation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { booking } = location.state || {};
-  const {
-    pickupAddress,
-    dropoffAddress,
-    pickupCords,
-    dropoffCords,
-    distance,
-    price,
-  } = booking || {};
+  const { pickupAddress, dropoffAddress, distance, price } = booking || {};
 
+  // State variables for coordinates
+  const [pickupCords, setPickupCords] = useState(null);
+  const [dropoffCords, setDropoffCords] = useState(null);
+
+  // State to manage ride end
+  const [isRideEnded, setIsRideEnded] = useState(false);
   // State to manage map visibility
-  const [isMapVisible, setIsMapVisible] = useState(false); // Initialize to false
-  const [isRideEnded, setIsRideEnded] = useState(false); // State to manage ride end
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+
+  // Load ride status from local storage on component mount
+  useEffect(() => {
+    const rideStatus = localStorage.getItem("rideStatus");
+    const rideEnded = localStorage.getItem("isRideEnded") === "true";
+
+    // Get coordinates from booking or local storage
+    if (rideStatus === "started") {
+      setIsMapVisible(true);
+      setPickupCords(booking.pickupCords);
+      setDropoffCords(booking.dropoffCords);
+    }
+
+    setIsRideEnded(rideEnded);
+  }, [booking]);
 
   const startRide = async () => {
     const confirmStart = window.confirm(
@@ -67,6 +80,9 @@ const DeliveryLocation = () => {
         if (status === 200) {
           alert("Ride Started!");
           setIsMapVisible(true); // Show the map only after starting the ride
+          setPickupCords(booking.pickupCords); // Set pickup coordinates
+          setDropoffCords(booking.dropoffCords); // Set dropoff coordinates
+          localStorage.setItem("rideStatus", "started"); // Persist ride status
         } else {
           alert("Ride already started!");
         }
@@ -95,6 +111,8 @@ const DeliveryLocation = () => {
         // Set state to hide map and show thank you card
         setIsMapVisible(false);
         setIsRideEnded(true);
+        localStorage.setItem("rideStatus", "ended"); // Clear ride status
+        localStorage.setItem("isRideEnded", "true"); // Persist end ride status
       } catch (error) {
         alert(error.response.data);
       }
@@ -137,7 +155,11 @@ const DeliveryLocation = () => {
           <p>Collect your price: ${price} from the admin</p>
           <button
             className="back-button"
-            onClick={() => navigate("/driver-dashboard")}
+            onClick={() => {
+              localStorage.removeItem("rideStatus");
+              localStorage.removeItem("isRideEnded");
+              navigate("/driver-dashboard");
+            }}
           >
             Back to Driver Dashboard
           </button>

@@ -6,6 +6,9 @@ export default function Homepage() {
     <div>
       <h1>Homepage</h1>
       <p>Current routes</p>
+      <Link to="/register">Register Page</Link>
+      <br />
+      <br />
       <Link to="/login">Login Page</Link>
       <br />
       <br />
@@ -19,6 +22,9 @@ export default function Homepage() {
       <br />
       <br />
       <Link to="/deliveryLocation">Delivery Location</Link>
+      <br />
+      <br />
+      <Link to="/logout">Logout</Link>
       <br />
       <br />
     </div>

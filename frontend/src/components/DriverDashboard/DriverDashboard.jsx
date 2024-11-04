@@ -80,7 +80,7 @@ export default function DriverDashboard() {
                 Delivered. Please Collect ₹{ride.price} from the admin.
               </p>
               <button className="create-btn" onClick={redirect}>
-                Pay Now
+                Collect Now
               </button>
             </div>
           ))
