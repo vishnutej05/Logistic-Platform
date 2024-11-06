@@ -6,6 +6,7 @@ const {
   driverDetails,
   startRide,
   endRide,
+  submitDriver,
 } = require("../controllers/driverController");
 const router = express.Router();
 
@@ -23,6 +24,9 @@ router.post("/start-ride/:bookingId", startRide);
 
 //to end the ride
 router.post("/end-ride/:bookingId", endRide);
+
+//to submit the driver detials for driver creation
+router.post("/submit-driver-request", submitDriver);
 
 router.get("/details", driverDetails);
 

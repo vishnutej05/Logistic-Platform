@@ -2,20 +2,16 @@ const Driver = require("../models/Driver"); // Import the Driver model
 const Booking = require("../models/Booking"); // Import the Booking
 
 const createDriver = async (req, res) => {
-  const { name, licenseNumber, phone, status } = req.body;
+  const { name, licenseNumber, phone } = req.body;
   const userId = req.userId; // Extract userId from request
 
-  // Check for required fields
-  if (!name || !licenseNumber || !phone || !status) {
-    return res.status(400).json({ message: "All fields are required." });
+  if (req.role !== "admin") {
+    return res.status(400).json({ message: "Only admins can create fleet !!" });
   }
 
-  // Optional: Check if the status is valid
-  const validStatuses = ["available", "busy"];
-  if (!validStatuses.includes(status)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid status. Must be 'available' or 'busy'." });
+  // Check for required fields
+  if (!name || !licenseNumber || !phone) {
+    return res.status(400).json({ message: "All fields are required." });
   }
 
   try {
@@ -37,7 +33,6 @@ const createDriver = async (req, res) => {
       user: userId, // Use 'user' instead of 'userId'
       licenseNumber,
       phone,
-      status,
     });
 
     // Save the new driver
@@ -169,6 +164,38 @@ const endRide = async (req, res) => {
   }
 };
 
+const submitDriver = async (req, res) => {
+  try {
+    const { name, licenseNumber, phone } = req.body;
+
+    const existingDriver = await Driver.findOne({
+      $or: [{ name }, { licenseNumber }, { phone }],
+    });
+
+    if (existingDriver) {
+      return res.status(400).json({
+        message:
+          "Driver with the same name, license number, or phone already exists.",
+      });
+    }
+
+    const newDriverRequest = new Driver({
+      name,
+      user: req.user._id, // Assumes logged-in driver user is sending the request
+      licenseNumber,
+      phone,
+      requestStatus: "pending",
+    });
+
+    await newDriverRequest.save();
+    res.status(201).json({
+      message: "Driver request submitted and awaiting admin approval.",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to submit driver request." });
+  }
+};
+
 module.exports = {
   createDriver,
   driversList,
@@ -176,4 +203,5 @@ module.exports = {
   driverDetails,
   startRide,
   endRide,
+  submitDriver,
 };

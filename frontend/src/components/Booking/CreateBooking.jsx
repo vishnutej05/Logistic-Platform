@@ -232,25 +232,30 @@ const CreateBooking = () => {
 
       <label className="input-label">Select Driver:</label>
       <div className="options-container">
-        {drivers.map((driver) => (
-          <div
-            key={driver._id}
-            className={`card ${
-              selectedDriver === driver._id ? "selected" : ""
-            }`}
-            onClick={() => setSelectedDriver(driver._id)}
-          >
-            {/* {console.log(driver)} */}
-            <h2 className="head">
-              {driver.name} (Contact: {String(driver.phone).slice(2)})
-            </h2>
-            <p>Rides Completed: {driver.level} </p>
-            <p>
-              Rides Driver Availability:
-              {driver.status === "available" ? "Yes" : "No"}
-            </p>
-          </div>
-        ))}
+        {drivers.map(
+          (driver) =>
+            driver.status !== "not-ready" && (
+              <div
+                key={driver._id}
+                className={`card ${
+                  selectedDriver === driver._id ? "selected" : ""
+                }`}
+                onClick={() => setSelectedDriver(driver._id)}
+              >
+                {/* {console.log(driver)} */}
+                <h2 className="head">
+                  {driver.name} (Contact: {String(driver.phone).slice(2)})
+                </h2>
+                <p>Rides Completed: {driver.level} </p>
+                {driver.status !== "not-ready" && (
+                  <p>
+                    Rides Driver Availability:
+                    {driver.status === "available" ? "Yes" : "No"}
+                  </p>
+                )}
+              </div>
+            )
+        )}
       </div>
 
       <label className="input-label">Distance (in km):</label>

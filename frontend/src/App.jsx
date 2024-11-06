@@ -5,13 +5,14 @@ import DeliveryLocation from "./components/DeliveryLocation/DeliveryLocation";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import CreateBooking from "./components/Booking/CreateBooking";
 import LoginForm from "./components/Auth/Login/LoginForm";
-// import DriverRides from "./components/DriverSideDetails/DriverRides"; // Import the DriverDashboard
-import Homepage from "./components/Auth/Homepage"; // Import the Homepage component
+import Homepage from "./components/Auth/Homepage";
 import UserTracking from "./components/UserTracking/UserTrackingDriver";
 import DriverDashboard from "./components/DriverDashboard/DriverDashboard";
 import { AppProvider } from "./context/AppContext";
 import RegistrationPage from "./components/Auth/Register/RegistrationPage";
 import Logout from "./components/Auth/Logout";
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import DriverCreation from "./components/DriverSideDetails/DriverSubmission";
 import "./App.css";
 function App() {
   return (
@@ -19,15 +20,16 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/register" element={<RegistrationPage />} />
             <Route path="/" element={<Homepage />} />
+            <Route path="/register" element={<RegistrationPage />} />
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/driver-dashboard" element={<DriverDashboard />} />
             <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/create-booking" element={<CreateBooking />} />
-            {/* <Route path="/driver-dashboard" element={<DriverRides />} /> */}
             <Route path="/track-driver" element={<UserTracking />} />
+            <Route path="/driver-dashboard" element={<DriverDashboard />} />
             <Route path="/deliveryLocation" element={<DeliveryLocation />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/driver-create" element={<DriverCreation />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>

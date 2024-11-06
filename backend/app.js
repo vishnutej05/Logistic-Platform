@@ -13,10 +13,10 @@ const bookingRoutes = require("./routes/booking");
 const fleetRoutes = require("./routes/fleet");
 const driverRoutes = require("./routes/drivers");
 const vehicleRoutes = require("./routes/vehicle");
-
+const adminRoutes = require("./routes/admin");
 // Middleware for authentication
 const auth = require("./middleware/userauth");
-
+const { verifyAdmin } = require("./middleware/verifyAdmin");
 // Initialize Express and HTTP server
 const app = express();
 const server = http.createServer(app);
@@ -46,6 +46,8 @@ app.use("/api/bookings", auth, bookingRoutes);
 app.use("/api/fleet", auth, fleetRoutes);
 app.use("/api/driver", auth, driverRoutes);
 app.use("/api/vehicle", auth, vehicleRoutes);
+app.use("/api/admin", verifyAdmin, adminRoutes);
+
 app.get("/", async (req, res) => {
   res.send("Welcome to ther server !");
 });

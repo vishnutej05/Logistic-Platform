@@ -18,6 +18,9 @@ export default function Homepage() {
       <Link to="/driver-dashboard">Driver Dashboard</Link>
       <br />
       <br />
+      <Link to="/admin-dashboard">Admin Dashboard</Link>
+      <br />
+      <br />
       <Link to="/track-driver">Track Driver</Link>
       <br />
       <br />

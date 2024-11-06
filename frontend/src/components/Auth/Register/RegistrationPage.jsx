@@ -44,7 +44,7 @@ const RegistrationPage = () => {
 
   return (
     <div className="registration-page">
-      <h1>Welcome to My Site</h1>
+      <h1>Welcome to GoodsBhejoBancho</h1>
       <h2>Please Make Your Identity</h2>
       {error && <p className="error-message">{error}</p>}{" "}
       {/* Display error message */}

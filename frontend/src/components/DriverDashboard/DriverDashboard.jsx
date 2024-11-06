@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DriverLocation from "../DriverSideDetails/DriverLocation";
+import DriverLocation from "../DriverLocation/DriverLocation";
 import DriverRides from "../DriverSideDetails/DriverRides";
 import site from "../common/API";
 import "./DriverDashboard.css"; // Import the CSS file for styling
