@@ -49,7 +49,12 @@ const createDriver = async (req, res) => {
 
 const driversList = async (req, res) => {
   try {
-    const driver = await Driver.find().populate("vehicle");
+    if (req.role !== "admin") {
+      return res.status(403).json({
+        message: "Access denied. Only admins can view all drivers.",
+      });
+    }
+    const driver = await Driver.find().populate("vehicle").populate("user");
     res.status(201).json(driver);
   } catch (error) {
     res

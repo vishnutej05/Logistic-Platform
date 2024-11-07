@@ -22,7 +22,7 @@ const driverRequestsforAdmin = async (req, res) => {
       .select("name licenseNumber phone createdAt")
       .exec();
 
-    console.log(req.user);
+    // console.log(req.user);
 
     if (driverRequests.length === 0) {
       return res.status(200).json({ message: "No driver requests available." });
@@ -71,8 +71,29 @@ const approveOrRejectDriverRequest = async (req, res) => {
   }
 };
 
+const DeleteDriver = async (req, res) => {
+  try {
+    const { driverId } = req.params;
+
+    // Find and delete the driver by their ID
+    const driver = await Driver.findByIdAndDelete(driverId);
+
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    // Respond with success message
+    res.status(200).json({ message: "Driver deleted successfully" });
+  } catch (error) {
+    // Handle unexpected errors gracefully
+    console.error("Error deleting driver:", error);
+    res.status(500).json({ message: "Failed to delete driver" });
+  }
+};
+
 module.exports = {
   getAnalytics,
   driverRequestsforAdmin,
   approveOrRejectDriverRequest,
+  DeleteDriver,
 };

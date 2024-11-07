@@ -28,6 +28,7 @@ router.post("/end-ride/:bookingId", endRide);
 //to submit the driver detials for driver creation
 router.post("/submit-driver-request", submitDriver);
 
+//to get driver details
 router.get("/details", driverDetails);
 
 module.exports = router;

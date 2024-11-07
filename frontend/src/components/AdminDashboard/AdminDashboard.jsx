@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import site from "../common/API"; // Make sure axios is set up here
+import site from "../common/API";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 export default function AdminDashboard() {
   const [showRequests, setShowRequests] = useState(false);
   const [driverRequests, setDriverRequests] = useState([]);
   const [message, setMessage] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const getToken = () =>
     document.cookie
@@ -12,13 +14,11 @@ export default function AdminDashboard() {
       .find((row) => row.startsWith("token="))
       ?.split("=")[1];
 
-  // Fetch driver submissions when the button is clicked
   const fetchDriverRequests = async () => {
     try {
       const response = await site.get("/api/admin/driver-requests", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      console.log(response);
       setDriverRequests(response.data);
     } catch (error) {
       console.error("Error fetching driver requests:", error);
@@ -26,7 +26,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // Handle approve/reject driver request
   const handleApproveReject = async (driverId, action) => {
     try {
       const response = await site.patch(
@@ -36,8 +35,6 @@ export default function AdminDashboard() {
           headers: { Authorization: `Bearer ${getToken()}` },
         }
       );
-      console.log(response.data.message);
-      // After action, refetch the driver requests
       fetchDriverRequests();
       setMessage(response.data.message);
     } catch (error) {
@@ -48,33 +45,37 @@ export default function AdminDashboard() {
 
   const handleShowRequests = () => {
     if (!showRequests) {
-      fetchDriverRequests(); // Fetch only if not already showing
+      fetchDriverRequests();
     }
     setShowRequests((prev) => !prev);
   };
 
   return (
     <div className="admin-dashboard">
+      <h2>Manage Driver Fleet</h2>
+
       <div className="driver-requests-card">
-        <h2>Driver Requests</h2>
-        <button onClick={handleShowRequests}>
+        <button className="toggle-requests-button" onClick={handleShowRequests}>
           {showRequests ? "Hide Requests" : "View Requests"}
         </button>
-        {message && <p>{message}</p>}
+        {message && <p className="message-text">{message}</p>}
         {showRequests && (
           <div className="requests-list">
             {driverRequests.length > 0 ? (
               driverRequests.map((request) => (
                 <div key={request._id} className="request-card">
-                  <h4>{request.name}</h4>
-                  <p>License: {request.licenseNumber}</p>
-                  <p>Phone: {request.phone}</p>
-                  <p>
+                  <h4 className="request-name">{request.name}</h4>
+                  <p className="request-info">
+                    License: {request.licenseNumber}
+                  </p>
+                  <p className="request-info">Phone: {request.phone}</p>
+                  <p className="request-date">
                     Submitted on:{" "}
                     {new Date(request.createdAt).toLocaleDateString()}
                   </p>
                   <div className="actions">
                     <button
+                      className="approve-button"
                       onClick={() =>
                         handleApproveReject(request._id, "approve")
                       }
@@ -82,6 +83,7 @@ export default function AdminDashboard() {
                       Approve
                     </button>
                     <button
+                      className="reject-button"
                       onClick={() => handleApproveReject(request._id, "reject")}
                     >
                       Reject
@@ -90,7 +92,7 @@ export default function AdminDashboard() {
                 </div>
               ))
             ) : (
-              <p>No driver requests available.</p>
+              <p className="no-requests">No driver requests available.</p>
             )}
           </div>
         )}

@@ -13,6 +13,9 @@ import RegistrationPage from "./components/Auth/Register/RegistrationPage";
 import Logout from "./components/Auth/Logout";
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 import DriverCreation from "./components/DriverSideDetails/DriverSubmission";
+
+import AdminDashboardRe from "./AdminDashboard";
+import ManageDriver from "./ManageDrivers";
 import "./App.css";
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/driver-create" element={<DriverCreation />} />
             <Route path="/logout" element={<Logout />} />
+
+            <Route path="/admin" element={<AdminDashboardRe />} />
+            <Route path="/admin/manage-drivers" element={<ManageDriver />} />
           </Routes>
         </div>
       </Router>
