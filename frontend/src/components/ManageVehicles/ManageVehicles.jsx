@@ -485,7 +485,7 @@ const VehicleManagementDashboard = () => {
                     </Typography>
                   )}
                   <Typography color="textSecondary">
-                    Capacity: {vehicle.capacity} persons  
+                    Capacity: {vehicle.capacity} persons
                   </Typography>
                   <Chip
                     label={vehicle.availability ? "Available" : "Not Available"}

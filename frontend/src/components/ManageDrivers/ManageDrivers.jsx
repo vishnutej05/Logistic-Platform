@@ -8,9 +8,9 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Badge,
-  Menu,
-  MenuItem,
+  // Badge,
+  // Menu,
+  // MenuItem,
   Grid,
   Card,
   CardContent,
@@ -27,7 +27,7 @@ import {
   Alert,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { IoMdNotifications } from "react-icons/io";
+// import { IoMdNotifications } from "react-icons/io";
 import { FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -51,18 +51,18 @@ const getToken = () =>
     .find((row) => row.startsWith("token="))
     ?.split("=")[1];
 
-const mockNotifications = [
-  { _id: 1, message: "New ride request received", time: "5 min ago" },
-  {
-    _id: 2,
-    message: "Driver John completed 10 trips today",
-    time: "1 hour ago",
-  },
-  { _id: 3, message: "System maintenance scheduled", time: "2 hours ago" },
-];
+// const mockNotifications = [
+//   { _id: 1, message: "New ride request received", time: "5 min ago" },
+//   {
+//     _id: 2,
+//     message: "Driver John completed 10 trips today",
+//     time: "1 hour ago",
+//   },
+//   { _id: 3, message: "System maintenance scheduled", time: "2 hours ago" },
+// ];
 
 const AdminDashboard = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
   const [expandedPanel, setExpandedPanel] = useState(true);
   const [showDrivers, setshowDrivers] = useState(true);
   const [selectedDriver, setSelectedDriver] = useState(null);
@@ -97,13 +97,13 @@ const AdminDashboard = () => {
     fetchDriverRequests();
   }, []);
 
-  const handleNotificationClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleNotificationClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleNotificationClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleNotificationClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   const handleDriverDelete = (driverId) => {
     setSelectedDriver(driverId);
@@ -162,15 +162,15 @@ const AdminDashboard = () => {
             mb: 4,
           }}
         >
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h4" component="h1">
             Manage Drivers
           </Typography>
-          <IconButton onClick={handleNotificationClick}>
+          {/* <IconButton onClick={handleNotificationClick}>
             <Badge badgeContent={mockNotifications.length} color="primary">
               <IoMdNotifications size={24} />
             </Badge>
-          </IconButton>
-          <Menu
+          </IconButton> */}
+          {/* <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleNotificationClose}
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
                 </Box>
               </MenuItem>
             ))}
-          </Menu>
+          </Menu> */}
         </Box>
 
         <Grid container spacing={3}>
@@ -201,6 +201,10 @@ const AdminDashboard = () => {
                 <IconButton onClick={() => setshowDrivers(!showDrivers)}>
                   {showDrivers ? <FaChevronUp /> : <FaChevronDown />}
                 </IconButton>
+              </Typography>
+
+              <Typography>
+                Total number of drivers ({drivers.length})
               </Typography>
 
               <Collapse in={showDrivers}>
