@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -6,11 +6,13 @@ import {
   Typography,
   Grid,
   Chip,
+  IconButton,
   TextField,
   MenuItem,
   Container,
   Paper,
   CircularProgress,
+  Button,
   Avatar,
   Divider,
 } from "@mui/material";
@@ -24,9 +26,7 @@ import {
   FaStar,
   FaClock,
 } from "react-icons/fa";
-import site from "../common/API";
 
-// Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
   transition: "transform 0.3s, box-shadow 0.3s",
   borderRadius: "16px",
@@ -64,38 +64,57 @@ const InfoBox = styled(Box)({
   marginBottom: "16px",
 });
 
-// Function to get token from cookies
-const getToken = () => {
-  const token = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("token="))
-    ?.split("=")[1];
-  return token || "";
-};
+const mockBookings = [
+  {
+    id: 1,
+    userName: "John Doe",
+    driverName: "Mike Smith",
+    vehicle: "Toyota Camry",
+    status: "completed",
+    price: "$45.00",
+    distance: "12.5 km",
+    pickupAddress: "123 Main St, City",
+    dropoffAddress: "456 Park Ave, City",
+    userImage: "images.unsplash.com/photo-1633332755192-727a05c4013d",
+    rating: 4.8,
+    duration: "25 mins",
+    phoneNumber: "+1 234-567-8900",
+  },
+  {
+    id: 2,
+    userName: "Alice Johnson",
+    driverName: "David Wilson",
+    vehicle: "Honda Civic",
+    status: "in-progress",
+    price: "$32.50",
+    distance: "8.2 km",
+    pickupAddress: "789 Oak Rd, City",
+    dropoffAddress: "321 Pine St, City",
+    userImage: "images.unsplash.com/photo-1494790108377-be9c29b29330",
+    rating: 4.5,
+    duration: "18 mins",
+    phoneNumber: "+1 234-567-8901",
+  },
+  {
+    id: 3,
+    userName: "Sarah Williams",
+    driverName: "Robert Brown",
+    vehicle: "Tesla Model 3",
+    status: "pending",
+    price: "$55.75",
+    distance: "15.8 km",
+    pickupAddress: "147 Elm St, City",
+    dropoffAddress: "258 Maple Ave, City",
+    userImage: "images.unsplash.com/photo-1534528741775-53994a69daeb",
+    rating: 4.9,
+    duration: "30 mins",
+    phoneNumber: "+1 234-567-8902",
+  },
+];
 
 const BookingsDashboard = () => {
-  const [bookings, setBookings] = useState([]); // State to store bookings fetched from API
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false);
-
-  // Fetch bookings from API when the component mounts
-  useEffect(() => {
-    const fetchBookings = async () => {
-      setLoading(true);
-      try {
-        const response = await site.get("/api/admin/bookings", {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
-        console.log(response.data);
-        setBookings(response.data || []); // Ensure response data is an array
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
-  }, []); // Empty dependency array means it runs once on mount
 
   const handleFilterChange = (event) => {
     setLoading(true);
@@ -103,7 +122,7 @@ const BookingsDashboard = () => {
     setTimeout(() => setLoading(false), 500);
   };
 
-  const filteredBookings = bookings.filter((booking) =>
+  const filteredBookings = mockBookings.filter((booking) =>
     filter === "all" ? true : booking.status === filter
   );
 
@@ -155,13 +174,13 @@ const BookingsDashboard = () => {
         ) : (
           <Grid container spacing={3}>
             {filteredBookings.map((booking) => (
-              <Grid item xs={12} md={6} lg={4} key={booking._id}>
+              <Grid item xs={12} md={6} lg={4} key={booking.id}>
                 <StyledCard>
                   <CardContent>
                     <Box display="flex" alignItems="center" mb={3}>
                       <StyledAvatar
-                        src={booking.userImage || ""} // Use optional chaining
-                        alt={booking.user.name || "User"}
+                        src={`https://${booking.userImage}`}
+                        alt={booking.userName}
                       />
                       <Box ml={2} flex={1}>
                         <Typography
@@ -169,7 +188,7 @@ const BookingsDashboard = () => {
                           component="div"
                           fontWeight="bold"
                         >
-                          {booking.user.name || "Unknown User"}
+                          {booking.userName}
                         </Typography>
                         <Box
                           display="flex"
@@ -178,7 +197,7 @@ const BookingsDashboard = () => {
                           mt={0.5}
                         >
                           <StatusChip
-                            label={booking.status || "unknown"}
+                            label={booking.status}
                             status={booking.status}
                             size="small"
                           />
@@ -186,7 +205,7 @@ const BookingsDashboard = () => {
                             <FaStar
                               style={{ color: "#ffd700", marginRight: 4 }}
                             />
-                            {booking.rating || "N/A"}
+                            {booking.rating}
                           </Typography>
                         </Box>
                       </Box>
@@ -203,7 +222,7 @@ const BookingsDashboard = () => {
                         mb={1}
                       >
                         <FaUser style={{ marginRight: 8 }} /> Driver:{" "}
-                        {booking.driver.name || "N/A"}
+                        {booking.driverName}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -213,7 +232,7 @@ const BookingsDashboard = () => {
                         mb={1}
                       >
                         <FaCar style={{ marginRight: 8 }} /> Vehicle:{" "}
-                        {booking.vehicle.model || "N/A"}
+                        {booking.vehicle}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -222,7 +241,7 @@ const BookingsDashboard = () => {
                         alignItems="center"
                       >
                         <FaPhone style={{ marginRight: 8 }} />{" "}
-                        {String(booking.driver.phone).slice(2) || "N/A"}
+                        {booking.phoneNumber}
                       </Typography>
                     </InfoBox>
 
@@ -237,7 +256,7 @@ const BookingsDashboard = () => {
                         <FaMapMarkerAlt
                           style={{ marginRight: 8, color: "#4caf50" }}
                         />{" "}
-                        Pickup: {booking.pickupLocation.address || "N/A"}
+                        Pickup: {booking.pickupAddress}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -248,7 +267,7 @@ const BookingsDashboard = () => {
                         <FaMapMarkerAlt
                           style={{ marginRight: 8, color: "#f44336" }}
                         />{" "}
-                        Dropoff: {booking.dropoffLocation.address || "N/A"}
+                        Dropoff: {booking.dropoffAddress}
                       </Typography>
                     </InfoBox>
 
@@ -263,31 +282,16 @@ const BookingsDashboard = () => {
                         color="primary"
                         fontWeight="bold"
                       >
-                        ₹{booking.price || "N/A"}
+                        {booking.price}
                       </Typography>
                       <Box display="flex" alignItems="center" gap={2}>
                         <Typography variant="body2" color="text.secondary">
                           <FaMapMarkerAlt style={{ marginRight: 4 }} />
-                          {booking.distance || "N/A"} km
+                          {booking.distance}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           <FaClock style={{ marginRight: 4 }} />
-                          {/* {booking.createdAt || "N/A"} */}
-                          {(() => {
-                            const start = new Date(booking.createdAt);
-                            const end = new Date(booking.updatedAt);
-                            const durationMs = end - start;
-
-                            // Calculate hours and minutes
-                            const hours = Math.floor(
-                              durationMs / (1000 * 60 * 60)
-                            );
-                            const minutes = Math.floor(
-                              (durationMs % (1000 * 60 * 60)) / (1000 * 60)
-                            );
-
-                            return `${hours}h ${minutes}m` || "N/A";
-                          })()}
+                          {booking.duration}
                         </Typography>
                       </Box>
                     </Box>

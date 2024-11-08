@@ -6,6 +6,7 @@ const {
   approveOrRejectDriverRequest,
   DeleteDriver,
   DeleteVehicle,
+  BookingsList,
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -19,6 +20,9 @@ router.patch("/approve-driver-request/:driverId", approveOrRejectDriverRequest);
 //to delete the driver
 router.delete("/delete-driver/:driverId", DeleteDriver);
 
+//to delete a vehicle
 router.delete("/delete-vehicle/:vehicleId", DeleteVehicle);
+
+router.get("/bookings", BookingsList);
 
 module.exports = router;

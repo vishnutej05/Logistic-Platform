@@ -112,10 +112,25 @@ const DeleteVehicle = async (req, res) => {
   }
 };
 
+const BookingsList = async (req, res) => {
+  try {
+    const booking = await Booking.find()
+      .populate("vehicle")
+      .populate("user")
+      .populate("driver");
+    res.status(200).json(booking);
+  } catch (error) {
+    // Handle unexpected errors gracefully
+    console.error("Error fetching bookings:", error);
+    res.status(500).json({ message: "Error fetching bookings" });
+  }
+};
+
 module.exports = {
   getAnalytics,
   driverRequestsforAdmin,
   approveOrRejectDriverRequest,
   DeleteDriver,
   DeleteVehicle,
+  BookingsList,
 };
