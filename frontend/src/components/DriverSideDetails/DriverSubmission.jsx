@@ -36,8 +36,10 @@ export default function DriverSubmission() {
           navigate("/driver-dashboard");
         }
       } catch (error) {
-        console.error("Error fetching driver details:", error);
-        setMessage("Failed to load driver status. Please try again later.");
+        // console.error("Error fetching driver details:", error);
+        setMessage(
+          "You should submit your details to the admin before accepting rides"
+        );
       }
     };
 

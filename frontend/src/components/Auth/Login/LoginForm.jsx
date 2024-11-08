@@ -26,9 +26,9 @@ const LoginForm = () => {
       if (data.role === "user") {
         navigate("/user-dashboard");
       } else if (data.role === "driver") {
-        navigate("/driver-create");
+        navigate("/submit-details");
       } else if (data.role === "admin") {
-        navigate("/admin-dashboard");
+        navigate("/admin");
       }
     } catch (error) {
       alert("Login failed");

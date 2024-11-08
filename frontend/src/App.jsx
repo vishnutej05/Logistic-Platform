@@ -11,11 +11,12 @@ import DriverDashboard from "./components/DriverDashboard/DriverDashboard";
 import { AppProvider } from "./context/AppContext";
 import RegistrationPage from "./components/Auth/Register/RegistrationPage";
 import Logout from "./components/Auth/Logout";
-import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
-import DriverCreation from "./components/DriverSideDetails/DriverSubmission";
+import DriverSubmission from "./components/DriverSideDetails/DriverSubmission";
+import AdminDashboardRe from "./components/AdminDashboard/AdminDashboard";
+import ManageDriver from "./components/ManageDrivers/ManageDrivers";
+import ManageVehicles from "./components/ManageVehicles/ManageVehicles";
+import ManageBookings from "./components/ManageBookings/ManageBookings";
 
-import AdminDashboardRe from "./AdminDashboard";
-import ManageDriver from "./ManageDrivers";
 import "./App.css";
 function App() {
   return (
@@ -31,12 +32,14 @@ function App() {
             <Route path="/track-driver" element={<UserTracking />} />
             <Route path="/driver-dashboard" element={<DriverDashboard />} />
             <Route path="/deliveryLocation" element={<DeliveryLocation />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/driver-create" element={<DriverCreation />} />
+            {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+            <Route path="/submit-details" element={<DriverSubmission />} />
             <Route path="/logout" element={<Logout />} />
 
             <Route path="/admin" element={<AdminDashboardRe />} />
             <Route path="/admin/manage-drivers" element={<ManageDriver />} />
+            <Route path="/admin/manage-vehicles" element={<ManageVehicles />} />
+            <Route path="/admin/manage-bookings" element={<ManageBookings />} />
           </Routes>
         </div>
       </Router>

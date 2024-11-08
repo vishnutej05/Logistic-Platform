@@ -17,7 +17,6 @@ import {
   Collapse,
   Button,
   Avatar,
-  Divider,
   Tooltip,
   Dialog,
   DialogActions,
@@ -29,12 +28,12 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { IoMdNotifications } from "react-icons/io";
-import { FaCarAlt, FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import BadgeIcon from "@mui/icons-material/Badge";
-import site from "./components/common/API";
+import site from "../common/API";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: "20px",
@@ -65,10 +64,22 @@ const mockNotifications = [
 const AdminDashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [expandedPanel, setExpandedPanel] = useState(true);
+  const [showDrivers, setshowDrivers] = useState(true);
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [drivers, setDrivers] = useState([]);
   const [driverRequests, setDriverRequests] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const fetchDriverRequests = async () => {
+    try {
+      const response = await site.get("/api/admin/driver-requests", {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      setDriverRequests(response.data);
+    } catch (error) {
+      console.error("Error fetching driver requests:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchDrivers = async () => {
@@ -79,17 +90,6 @@ const AdminDashboard = () => {
         setDrivers(response.data);
       } catch (error) {
         console.error("Error fetching drivers:", error);
-      }
-    };
-
-    const fetchDriverRequests = async () => {
-      try {
-        const response = await site.get("/api/admin/driver-requests", {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
-        setDriverRequests(response.data);
-      } catch (error) {
-        console.error("Error fetching driver requests:", error);
       }
     };
 
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
     try {
       // Call the delete driver API
       const response = await site.delete(
-        `/api/admin/delete/${selectedDriver}`,
+        `/api/admin/delete-driver/${selectedDriver}`,
         {
           headers: { Authorization: `Bearer ${getToken()}` },
         }
@@ -141,10 +141,11 @@ const AdminDashboard = () => {
         }
       );
       console.log(response);
-      Alert(response.data.message);
+      alert(response.data.message);
       setDriverRequests(
         driverRequests.filter((request) => request._id !== driverId)
       );
+      fetchDriverRequests();
     } catch (error) {
       console.error(`Error ${action}ing driver request:`, error);
     }
@@ -162,7 +163,7 @@ const AdminDashboard = () => {
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom>
-            Admin Dashboard
+            Manage Drivers
           </Typography>
           <IconButton onClick={handleNotificationClick}>
             <Badge badgeContent={mockNotifications.length} color="primary">
@@ -197,106 +198,112 @@ const AdminDashboard = () => {
             <StyledPaper elevation={3}>
               <Typography variant="h6" gutterBottom>
                 Driver List
+                <IconButton onClick={() => setshowDrivers(!showDrivers)}>
+                  {showDrivers ? <FaChevronUp /> : <FaChevronDown />}
+                </IconButton>
               </Typography>
-              <List>
-                {drivers.map((driver) => (
-                  <Paper
-                    key={driver._id}
-                    elevation={3}
-                    sx={{
-                      mb: 2,
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "action.hover" },
-                    }}
-                  >
-                    <ListItem
-                      disableGutters
+
+              <Collapse in={showDrivers}>
+                <List>
+                  {drivers.map((driver) => (
+                    <Paper
+                      key={driver._id}
+                      elevation={3}
                       sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
+                        mb: 2,
+                        p: 2,
+                        borderRadius: 2,
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "action.hover" },
                       }}
                     >
-                      <Avatar
-                        src={driver.image}
-                        alt={driver.name}
-                        sx={{ mr: 2 }}
-                      />
-                      <ListItemText
-                        primary={driver.name}
-                        secondary={
-                          <Stack spacing={1} sx={{ mt: 1 }}>
-                            <Typography variant="body2">
-                              {`Status: ${driver.status} • Trips: ${driver.level} • Rating: ${driver.rating}`}
-                            </Typography>
-
-                            <Box display="flex" alignItems="center">
-                              <PhoneIcon fontSize="small" sx={{ mr: 1 }} />
+                      <ListItem
+                        disableGutters
+                        sx={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                        }}
+                      >
+                        <Avatar
+                          src={driver.image}
+                          alt={driver.name}
+                          sx={{ mr: 2 }}
+                        />
+                        <ListItemText
+                          primary={driver.name}
+                          secondary={
+                            <Stack spacing={1} sx={{ mt: 1 }}>
                               <Typography variant="body2">
-                                {driver.phone}
+                                {`Status: ${driver.status} • Trips: ${driver.level} • Rating: ${driver.rating}`}
                               </Typography>
-                            </Box>
 
-                            <Box display="flex" alignItems="center">
-                              <BadgeIcon fontSize="small" sx={{ mr: 1 }} />
-                              <Typography variant="body2">{`License Number: ${driver.licenseNumber}`}</Typography>
-                            </Box>
+                              <Box display="flex" alignItems="center">
+                                <PhoneIcon fontSize="small" sx={{ mr: 1 }} />
+                                <Typography variant="body2">
+                                  {driver.phone}
+                                </Typography>
+                              </Box>
 
-                            <Box display="flex" alignItems="center">
-                              <EmailIcon fontSize="small" sx={{ mr: 1 }} />
-                              <Typography variant="body2">
-                                {driver.user
-                                  ? `Email: ${driver.user.email}`
-                                  : "Email: Not Available"}
+                              <Box display="flex" alignItems="center">
+                                <BadgeIcon fontSize="small" sx={{ mr: 1 }} />
+                                <Typography variant="body2">{`License Number: ${driver.licenseNumber}`}</Typography>
+                              </Box>
+
+                              <Box display="flex" alignItems="center">
+                                <EmailIcon fontSize="small" sx={{ mr: 1 }} />
+                                <Typography variant="body2">
+                                  {driver.user
+                                    ? `Email: ${driver.user.email}`
+                                    : "Email: Not Available"}
+                                </Typography>
+                              </Box>
+
+                              <Box display="flex" alignItems="center">
+                                <DirectionsCarIcon
+                                  fontSize="small"
+                                  sx={{ mr: 1 }}
+                                />
+                                <Typography variant="body2">
+                                  {`Vehicle Assigned: ${
+                                    driver.vehicle
+                                      ? `${driver.vehicle.model} (${driver.vehicle.type})`
+                                      : "No vehicle assigned"
+                                  }`}
+                                </Typography>
+                              </Box>
+
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontStyle: "italic",
+                                  color: "text.secondary",
+                                }}
+                              >
+                                {`Joined On: ${new Date(
+                                  driver.createdAt
+                                ).toLocaleDateString("en-IN", {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                })}`}
                               </Typography>
-                            </Box>
-
-                            <Box display="flex" alignItems="center">
-                              <DirectionsCarIcon
-                                fontSize="small"
-                                sx={{ mr: 1 }}
-                              />
-                              <Typography variant="body2">
-                                {`Vehicle Assigned: ${
-                                  driver.vehicle
-                                    ? `${driver.vehicle.model} (${driver.vehicle.type})`
-                                    : "No vehicle assigned"
-                                }`}
-                              </Typography>
-                            </Box>
-
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                fontStyle: "italic",
-                                color: "text.secondary",
-                              }}
-                            >
-                              {`Joined On: ${new Date(
-                                driver.createdAt
-                              ).toLocaleDateString("en-IN", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}`}
-                            </Typography>
-                          </Stack>
-                        }
-                      />
-                      <Tooltip title="Delete Driver">
-                        <IconButton
-                          edge="end"
-                          onClick={() => handleDriverDelete(driver._id)}
-                          color="error"
-                        >
-                          <FaTrash />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItem>
-                  </Paper>
-                ))}
-              </List>
+                            </Stack>
+                          }
+                        />
+                        <Tooltip title="Delete Driver">
+                          <IconButton
+                            edge="end"
+                            onClick={() => handleDriverDelete(driver._id)}
+                            color="error"
+                          >
+                            <FaTrash />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItem>
+                    </Paper>
+                  ))}
+                </List>
+              </Collapse>
             </StyledPaper>
           </Grid>
 

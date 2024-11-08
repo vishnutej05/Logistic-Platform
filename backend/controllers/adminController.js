@@ -1,5 +1,6 @@
 const Booking = require("../models/Booking");
 const Driver = require("../models/Driver");
+const Vehicle = require("../models/Vehicle");
 
 const getAnalytics = async (req, res) => {
   try {
@@ -91,9 +92,30 @@ const DeleteDriver = async (req, res) => {
   }
 };
 
+const DeleteVehicle = async (req, res) => {
+  try {
+    const { vehicleId } = req.params;
+
+    // Find and delete the driver by their ID
+    const vehicle = await Vehicle.findByIdAndDelete(vehicleId);
+
+    if (!vehicle) {
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+
+    // Respond with success message
+    res.status(200).json({ message: "Vehiicle deleted successfully" });
+  } catch (error) {
+    // Handle unexpected errors gracefully
+    console.error("Error deleting vehicle:", error);
+    res.status(500).json({ message: "Failed to delete vehicle" });
+  }
+};
+
 module.exports = {
   getAnalytics,
   driverRequestsforAdmin,
   approveOrRejectDriverRequest,
   DeleteDriver,
+  DeleteVehicle,
 };

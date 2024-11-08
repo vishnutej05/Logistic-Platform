@@ -1,102 +1,146 @@
-import React, { useState, useEffect } from "react";
-import site from "../common/API";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  AppBar,
+  Toolbar,
+  styled,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+// import { IoNotifications } from "react-icons/io5";
+import { FaCarSide, FaUsers, FaCalendarAlt } from "react-icons/fa";
+import NotificationIcon from "../Notifications/Notifications";
 
-export default function AdminDashboard() {
-  const [showRequests, setShowRequests] = useState(false);
-  const [driverRequests, setDriverRequests] = useState([]);
-  const [message, setMessage] = useState("");
-  const [showNotifications, setShowNotifications] = useState(false);
+const StyledCard = styled(Card)(({ theme }) => ({
+  minWidth: 275,
+  cursor: "pointer",
+  transition: "all 0.3s ease-in-out",
+  margin: theme.spacing(2),
+  backgroundColor: "#ffffff",
+  "&:hover": {
+    transform: "scale(1.05)",
+    boxShadow: theme.shadows[10],
+  },
+}));
 
-  const getToken = () =>
-    document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
+const DashboardContainer = styled(Container)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
+}));
 
-  const fetchDriverRequests = async () => {
-    try {
-      const response = await site.get("/api/admin/driver-requests", {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-      setDriverRequests(response.data);
-    } catch (error) {
-      console.error("Error fetching driver requests:", error);
-      setMessage("Failed to load driver requests.");
-    }
-  };
+const CardsContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  alignItems: "stretch",
+  gap: theme.spacing(2),
+  marginTop: theme.spacing(4),
+}));
 
-  const handleApproveReject = async (driverId, action) => {
-    try {
-      const response = await site.patch(
-        `/api/admin/approve-driver-request/${driverId}`,
-        { action },
-        {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
-      fetchDriverRequests();
-      setMessage(response.data.message);
-    } catch (error) {
-      console.error("Error approving/rejecting request:", error);
-      setMessage("Failed to approve or reject the driver request.");
-    }
-  };
+const IconContainer = styled(Box)({
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "1rem",
+});
 
-  const handleShowRequests = () => {
-    if (!showRequests) {
-      fetchDriverRequests();
-    }
-    setShowRequests((prev) => !prev);
-  };
+const AdminDashboardRe = () => {
+  const theme = useTheme();
+  const Navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const [notifications] = useState(5);
+
+  const dashboardCards = [
+    {
+      title: "Manage Driver Fleet",
+      icon: <FaUsers size={32} color="#1976d2" />,
+      onClick: () => {
+        console.log("Navigate to Driver Management");
+        Navigate("/admin/manage-drivers");
+      },
+    },
+    {
+      title: "Manage Vehicle Fleet",
+      icon: <FaCarSide size={32} color="#1976d2" />,
+      onClick: () => {
+        console.log("Navigate to Vehicle Management");
+        Navigate("/admin/manage-vehicles");
+      },
+    },
+    {
+      title: "Manage Booking Fleet",
+      icon: <FaCalendarAlt size={32} color="#1976d2" />,
+      onClick: () => {
+        console.log("Navigate to Booking Management");
+        Navigate("/admin/manage-bookings");
+      },
+    },
+  ];
 
   return (
-    <div className="admin-dashboard">
-      <h2>Manage Driver Fleet</h2>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: "#ffffff", boxShadow: 1 }}
+      >
+        <Toolbar>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#1976d2" }}
+          >
+            Admin Dashboard
+          </Typography>
+          {/* <IconButton size="large" color="primary">
+            <Badge badgeContent={notifications} color="error">
+              <IoNotifications size={24} />
+            </Badge>
+          </IconButton> */}
+          <NotificationIcon />
+        </Toolbar>
+      </AppBar>
 
-      <div className="driver-requests-card">
-        <button className="toggle-requests-button" onClick={handleShowRequests}>
-          {showRequests ? "Hide Requests" : "View Requests"}
-        </button>
-        {message && <p className="message-text">{message}</p>}
-        {showRequests && (
-          <div className="requests-list">
-            {driverRequests.length > 0 ? (
-              driverRequests.map((request) => (
-                <div key={request._id} className="request-card">
-                  <h4 className="request-name">{request.name}</h4>
-                  <p className="request-info">
-                    License: {request.licenseNumber}
-                  </p>
-                  <p className="request-info">Phone: {request.phone}</p>
-                  <p className="request-date">
-                    Submitted on:{" "}
-                    {new Date(request.createdAt).toLocaleDateString()}
-                  </p>
-                  <div className="actions">
-                    <button
-                      className="approve-button"
-                      onClick={() =>
-                        handleApproveReject(request._id, "approve")
-                      }
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="reject-button"
-                      onClick={() => handleApproveReject(request._id, "reject")}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="no-requests">No driver requests available.</p>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+      <DashboardContainer maxWidth="lg">
+        <CardsContainer>
+          {dashboardCards.map((card, index) => (
+            <StyledCard
+              key={index}
+              onClick={card.onClick}
+              sx={{
+                width: isMobile ? "100%" : "30%",
+                minHeight: 200,
+              }}
+            >
+              <CardContent>
+                <IconContainer>{card.icon}</IconContainer>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  align="center"
+                  color="primary"
+                  gutterBottom
+                >
+                  {card.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  align="center"
+                >
+                  Click to manage {card.title.toLowerCase()}
+                </Typography>
+              </CardContent>
+            </StyledCard>
+          ))}
+        </CardsContainer>
+      </DashboardContainer>
+    </Box>
   );
-}
+};
+
+export default AdminDashboardRe;
