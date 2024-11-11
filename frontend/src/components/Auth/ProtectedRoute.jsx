@@ -1,25 +1,44 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import Navbar from "../NavBar/Navbar";
 const ProtectedRoute = ({ requiredRole }) => {
-  const getToken = () =>
-    document.cookie
+  const location = useLocation();
+
+  const getToken = () => {
+    const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("token="))
       ?.split("=")[1];
-
-  if (!getToken()) {
-    return <Navigate to="/login" />;
-  }
+    return token;
+  };
 
   const role = localStorage.getItem("role");
 
-  // If there's no role in localStorage or the role doesn't match the required role
-  if (!role || role !== requiredRole) {
-    return <Navigate to="/logout" />;
+  // console.log("User Role:", role);
+  // console.log("Required Role:", requiredRole);
+  // console.log("Token Present:", Boolean(getToken()));
+
+  // Check if the user is authenticated
+  if (!getToken()) {
+    console.log("No token found, redirecting to login.");
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <Outlet />;
+  // Check if the role in localStorage matches the required role for this route
+  if (role !== requiredRole) {
+    console.log(
+      `Role mismatch: User role is ${role} but needs ${requiredRole}. Redirecting to logout.`
+    );
+    return <Navigate to="/logout" replace />;
+  }
+
+  // Render the protected content for authorized users
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
 };
 
 export default ProtectedRoute;

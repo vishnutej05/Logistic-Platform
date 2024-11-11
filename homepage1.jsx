@@ -11,11 +11,10 @@ import { BiCurrentLocation } from "react-icons/bi";
 import { BsArrowRight } from "react-icons/bs";
 import { FiInstagram, FiTwitter, FiFacebook, FiLinkedin } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const Homepage = () => {
   const [activeTab, setActiveTab] = useState("user");
-  const navigate = useNavigate();
 
   const roles = {
     user: {
@@ -60,7 +59,7 @@ const Homepage = () => {
         className="relative h-screen flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1504376830547-506dedfe1fe9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+            "url('https://images.unsplash.com/photo-1534523456099-480ef6736f0f?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
           backgroundBlendMode: "overlay",
           backgroundColor: "rgba(0,0,0,0.6)",
         }}
@@ -85,9 +84,7 @@ const Homepage = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              navigate("/register");
-            }}
+            onClick = {<Navigate to = "/register"/>}
             className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300"
           >
             Get Started
