@@ -8,18 +8,44 @@ export default function UserDashboard() {
   const [currentBookings, setCurrentBookings] = useState([]);
   const [previousBookings, setPreviousBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { setbooking } = useContext(AppContext);
+  const { setBooking } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const getToken = () => {
-    const tokenString = document.cookie
+  const getToken = () =>
+    document.cookie
       .split("; ")
-      .find((row) => row.startsWith("token="));
-    return tokenString ? tokenString.split("=")[1] : null;
-  };
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
 
   const redirect = () => {
-    alert("The admin will be notified of the payment (Should Integrate)");
+    const Pay = async () => {
+      try {
+        const bookingId = previousBookings[0]._id;
+
+        console.log(getToken());
+        console.log(bookingId);
+
+        const response = await site.patch(
+          `/api/bookings/payment/${bookingId}`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }
+        );
+        console.log(response.data.message);
+        // Log the success response
+        alert("Payment successful");
+      } catch (error) {
+        if (error.status === 400) {
+          console.log(error.response.data.message);
+          // hide pay now button when then control enters this block
+          document.getElementById("payNowButton").style.display = "none";
+        }
+        console.error("Error processing payment:", error);
+      }
+    };
+
+    Pay();
   };
 
   useEffect(() => {
@@ -54,7 +80,7 @@ export default function UserDashboard() {
   };
 
   const trackDriver = (booking) => {
-    setbooking(booking);
+    setBooking(booking);
     navigate("/track-driver");
   };
 
@@ -70,6 +96,13 @@ export default function UserDashboard() {
               <div className="booking-card" key={booking._id}>
                 <h3 className="subHeadings">Booking Details</h3>
                 <div className="booking-detail">
+                  {/* {console.log(booking)} */}
+                  <p>
+                    <strong>Payment Status:</strong> {booking.paymentStatus}
+                  </p>
+                  <p>
+                    <strong>Driver:</strong> {booking.driver.name}
+                  </p>
                   <p>
                     <strong>Pickup:</strong> {booking.pickupLocation.address}
                   </p>
@@ -77,19 +110,34 @@ export default function UserDashboard() {
                     <strong>Dropoff:</strong> {booking.dropoffLocation.address}
                   </p>
                   <p>
-                    <strong>Booking Time:</strong>{" "}
-                    {new Date(booking.createdAt).toLocaleString("en-IN", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
+                    <strong>Time Taken:</strong>{" "}
+                    {(() => {
+                      const start = new Date(booking.createdAt);
+                      const end = new Date(booking.updatedAt);
+                      const durationMs = end - start;
+
+                      // Calculate hours and minutes
+                      const hours = Math.floor(durationMs / (1000 * 60 * 60));
+                      const minutes = Math.floor(
+                        (durationMs % (1000 * 60 * 60)) / (1000 * 60)
+                      );
+
+                      return `${hours}h ${minutes}m` || "N/A";
+                    })()}
                   </p>
-                  {console.log(booking)}
+                  {/* {console.log(booking)} */}
                   <p className="delivered-message">
                     Delivered. Please pay ₹{booking.price} to the admin.
                   </p>
-                  <button className="create-btn" onClick={redirect}>
-                    Pay Now
-                  </button>
+                  {booking.paymentStatus !== "paid" && (
+                    <button
+                      className="create-btn"
+                      onClick={redirect}
+                      id="payNowButton"
+                    >
+                      Pay Now
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

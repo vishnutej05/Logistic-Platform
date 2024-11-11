@@ -291,6 +291,12 @@ const BookingsDashboard = () => {
                         </Typography>
                       </Box>
                     </Box>
+                    <Typography variant="h6" fontWeight="bold">
+                      Payment Status:{" "}
+                      {booking.paymentStatus === "pending"
+                        ? "Not Paid"
+                        : "Done" || "N/A"}
+                    </Typography>
                   </CardContent>
                 </StyledCard>
               </Grid>

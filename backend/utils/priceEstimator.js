@@ -1,8 +1,8 @@
 const vehicleRates = {
-  bike: [500, 10], // Example: 20 per km
-  car: [800, 15], // Example: 40 per km
-  van: [1000, 20], // Example: 60 per km
-  truck: [2000, 25], // Example: 100 per km
+  bike: [2000, 15], // Example: 20 per km
+  car: [4000, 20], // Example: 40 per km
+  van: [8000, 25], // Example: 60 per km
+  truck: [10000, 30], // Example: 100 per km
 };
 
 // Function to estimate price based on vehicle type and distance

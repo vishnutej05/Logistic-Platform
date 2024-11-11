@@ -37,7 +37,7 @@ const DriverDashboard = () => {
       const { data } = await site.get("/api/bookings/current-bookings", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      console.log(data[0]);
+      // console.log(data[0]);
 
       const details = {
         pickupAddress: data[0].pickupLocation.address,

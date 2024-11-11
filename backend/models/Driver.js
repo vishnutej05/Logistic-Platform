@@ -8,7 +8,7 @@ const driverSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    licenseNumber: { type: String },
+    licenseNumber: { type: String, required: true },
     vehicle: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vehicle",

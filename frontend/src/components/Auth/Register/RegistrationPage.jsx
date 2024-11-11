@@ -11,6 +11,7 @@ const RegistrationPage = () => {
     email: "",
     password: "",
     role: "user", // Default role
+    phone: "",
   });
 
   const [error, setError] = useState(""); // State for error messages
@@ -30,7 +31,7 @@ const RegistrationPage = () => {
       const response = await site.post("/api/auth/register", formData);
       console.log("User Registered:", response.data); // For demonstration
 
-      console.log(formData.role);
+      // console.log(formData.role);
       // Navigate to login page after registration
       navigate("/login");
     } catch (error) {
@@ -96,6 +97,15 @@ const RegistrationPage = () => {
             <option value="admin">Admin</option>
           </select>
         </div>
+        <label htmlFor="phone">Phone Number:</label>
+        <input
+          type="phone"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+        />
         <button type="submit" className="register-button">
           Register
         </button>

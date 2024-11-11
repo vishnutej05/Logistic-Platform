@@ -141,9 +141,12 @@ const DeliveryLocation = () => {
             </p>
           </div>
           <div className="button-container">
-            <button className="ride-button" onClick={startRide}>
-              Start Ride
-            </button>
+            {!localStorage.rideStatus && (
+              <button className="ride-button" onClick={startRide}>
+                Start Ride : ""
+              </button>
+            )}
+
             <button className="ride-button" onClick={endRide}>
               End Ride
             </button>
@@ -174,9 +177,16 @@ const DeliveryLocation = () => {
           center={pickupCords || defaultCenter}
           onLoad={(map) => (mapRef.current = map)}
         >
-          {/* Display Pickup Marker */}
+          {/* Display Pickup Marker with custom green icon */}
           {pickupCords && (
-            <Marker position={pickupCords} title="Pickup Location" />
+            <Marker
+              position={pickupCords}
+              title="Pickup Location"
+              icon={{
+                url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Green marker icon
+                scaledSize: new window.google.maps.Size(30, 30), // Adjust size if needed
+              }}
+            />
           )}
 
           {/* Display Dropoff Marker */}

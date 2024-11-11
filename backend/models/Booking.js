@@ -39,6 +39,11 @@ const bookingSchema = new mongoose.Schema(
     },
     price: { type: Number, required: true },
     distance: { type: Number, required: true }, // distance in km
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

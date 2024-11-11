@@ -5,6 +5,7 @@ const {
   currentBooking,
   getAvailableBookings,
   completedBookings,
+  paymentSection,
 } = require("../controllers/bookingController");
 
 const router = express.Router();
@@ -24,4 +25,5 @@ router.get("/available-bookings", getAvailableBookings);
 //to show completed bookings
 router.get("/completed-bookings", completedBookings);
 
+router.patch("/payment/:bookingId", paymentSection);
 module.exports = router;

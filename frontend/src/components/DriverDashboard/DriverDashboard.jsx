@@ -14,11 +14,6 @@ export default function DriverDashboard() {
     return tokenString ? tokenString.split("=")[1] : null;
   };
 
-  const redirect = () => {
-    alert("Yet to be implemented will implement after implementing admin side");
-    // navigate("/homepage");
-  };
-
   useEffect(() => {
     const fetchPastRides = async () => {
       try {
@@ -77,11 +72,8 @@ export default function DriverDashboard() {
                 <strong>Distance:</strong> {ride.distance} km
               </p>
               <p className="delivered-message">
-                Delivered. Please Collect ₹{ride.price} from the admin.
+                Delivered, ₹{ride.price} will be added to your account.
               </p>
-              <button className="create-btn" onClick={redirect}>
-                Collect Now
-              </button>
             </div>
           ))
         )}

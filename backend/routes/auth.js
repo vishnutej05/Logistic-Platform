@@ -7,10 +7,10 @@ const User = require("../models/User");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, phone } = req.body;
 
   // Check for required fields
-  if (!name || !email || !password || !role) {
+  if (!name || !email || !password || !role || !phone) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -30,6 +30,7 @@ router.post("/register", async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      phone,
     });
 
     await newUser.save();
@@ -69,7 +70,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 
 router.get("/", async (req, res) => {
   res.send("Welcome");

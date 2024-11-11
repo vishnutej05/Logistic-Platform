@@ -68,9 +68,6 @@ const getUserBookings = async (req, res) => {
     const bookings = await Booking.find({ user: req.userId })
       .populate("driver") // Populate driver details
       .populate("vehicle") // Populate vehicle details if needed
-      .select(
-        "pickupLocation dropoffLocation user vehicle driver status price distance createdAt updates"
-      ) // Only select necessary fields
       .lean(); // Use lean for better performance
 
     // Format the response to match the desired structure
@@ -96,8 +93,10 @@ const getUserBookings = async (req, res) => {
       status: booking.status,
       price: booking.price,
       distance: booking.distance,
-      createdAt: booking.createdAt,
       updates: booking.updates,
+      paymentStatus: booking.paymentStatus,
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
     }));
 
     res.status(200).json(formattedBookings);
@@ -200,7 +199,7 @@ const completedBookings = async (req, res) => {
       driver: driverId,
       status: "completed",
     });
-    // console.log("Completed bookings found:", bookings); 
+    // console.log("Completed bookings found:", bookings);
 
     // Check if there are no completed bookings
     if (!bookings.length) {
@@ -217,10 +216,36 @@ const completedBookings = async (req, res) => {
   }
 };
 
+const paymentSection = async (req, res) => {
+  const { bookingId } = req.params;
+  console.log(req.userId);
+  try {
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    console.log(booking.status);
+
+    if (booking.paymentStatus === "pending") {
+      booking.paymentStatus = "paid";
+      await booking.save();
+      return res.json({ message: "Payment successful", booking });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Booking already paid or completed" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error processing payment", error });
+  }
+};
+
 module.exports = {
   createBooking,
   getUserBookings,
   currentBooking,
   getAvailableBookings,
   completedBookings,
+  paymentSection,
 };

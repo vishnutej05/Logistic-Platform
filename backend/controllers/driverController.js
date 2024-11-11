@@ -49,17 +49,22 @@ const createDriver = async (req, res) => {
 
 const driversList = async (req, res) => {
   try {
+    // Uncomment this if you need to restrict access to admin users
     // if (req.role !== "admin") {
     //   return res.status(403).json({
     //     message: "Access denied. Only admins can view all drivers.",
     //   });
     // }
-    const driver = await Driver.find().populate("vehicle").populate("user");
-    res.status(201).json(driver);
+
+    const drivers = await Driver.find({ status: { $ne: "not-ready" } })
+      .populate("vehicle")
+      .populate("user");
+
+    res.status(200).json(drivers);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error creating driver", error: error.message });
+      .json({ message: "Error fetching drivers", error: error.message });
   }
 };
 
@@ -197,6 +202,7 @@ const submitDriver = async (req, res) => {
       message: "Driver request submitted and awaiting admin approval.",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Failed to submit driver request." });
   }
 };

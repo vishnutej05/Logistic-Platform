@@ -41,7 +41,7 @@ const UserTracking = () => {
   useEffect(() => {
     // Listen for real-time location updates
     socket.on("trackDriver", (locationData) => {
-      console.log("Tracking Driver:", locationData);
+      // console.log("Tracking Driver:", locationData);
 
       // Add the new location to the path
       setPath((prevPath) => [
@@ -55,11 +55,6 @@ const UserTracking = () => {
         lng: locationData.longitude,
       });
     });
-
-    // Clean up listener on component unmount
-    return () => {
-      socket.off("trackDriver");
-    };
   }, []);
 
   if (!isLoaded) return <div>Loading Maps...</div>;
@@ -67,6 +62,7 @@ const UserTracking = () => {
   return (
     <div className="container">
       <h2 className="headings">Tracking Driver for Booking</h2>
+      {/* {console.log(booking)} */}
       <p>
         <strong>Pickup:</strong>
         {!booking ? "Unable to fetch now" : booking.pickupLocation.address}
