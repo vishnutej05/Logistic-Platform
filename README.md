@@ -24,11 +24,31 @@ Efficient and reliable transportation of goods is essential in today's fast-pace
 
 ## API Endpoints
 
-1. **GET** `/api/driver/available-bookings`: Get a list of available bookings for the driver.
-2. **POST** `/api/driver/accept-booking/:bookingId`: Accept a pending booking and mark it as in-progress.
-3. **GET** `/api/driver/current-bookings`: Fetch the current bookings for the driver.
-4. **POST** `/api/driver/logout`: Logout and clear session.
+The platform provides a variety of APIs categorized by role and functionality:
 
+### **Driver Routes**
+All routes for drivers are accessible via `/api/driver`. Example operations include:
+- Viewing available bookings
+- Accepting a booking
+- Fetching current bookings
+- Logging out of the session
+
+### **User Routes**
+All user-specific routes are accessible via `/api/user`. Example operations include:
+- Registering and logging in
+- Creating bookings
+- Viewing booking history
+
+### **Admin Routes**
+Admin-specific routes are accessible via `/api/admin`. Admin operations include:
+- Managing fleet (vehicles and drivers)
+- Viewing analytics
+- Overseeing all platform activities
+
+### **Global Routes**
+- `/api/login`: Handles authentication-related routes login.
+- `/api/register`: Handles authentication-related routes registration.
+  
 
 ## Installation
 
