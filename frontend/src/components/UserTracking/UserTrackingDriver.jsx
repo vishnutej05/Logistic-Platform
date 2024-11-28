@@ -13,7 +13,7 @@ import "./UserTracking.css";
 const socket = io("http://localhost:5000"); // Replace with your server address
 
 const mapContainerStyle = {
-  width: "85vw",
+  width: "95vw",
   height: "100vh",
 };
 
@@ -60,7 +60,7 @@ const UserTracking = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-    <div className="container">
+    <div className="track-container">
       <h2 className="headings">Tracking Driver for Booking</h2>
       {/* {console.log(booking)} */}
       <p>

@@ -91,32 +91,32 @@ const DriverLocation = () => {
   }, [driverInfo.name, driverInfo.location]);
 
   // Simulate driver movement for testing
-  useEffect(() => {
-    const simulateDriverMovement = () => {
-      let lat = 17.5319321; // Starting latitude
-      let lng = 78.5187863; // Starting longitude
-      const speed = 0.01; // Movement speed
-      const interval = setInterval(() => {
-        lat += (Math.random() - 0.5) * speed; // Random latitude change
-        lng += (Math.random() - 0.5) * speed; // Random longitude change
-        const locationData = {
-          driverId: "123", // This could be dynamic based on actual driver ID
-          latitude: lat,
-          longitude: lng,
-        };
-        // Emit location updates to the server
-        socket.emit("driverLocationUpdate", locationData);
-      }, 2000); // Update every 2 seconds
-      setMovementInterval(interval);
+  // useEffect(() => {
+  //   const simulateDriverMovement = () => {
+  //     let lat = 17.5319321; // Starting latitude
+  //     let lng = 78.5187863; // Starting longitude
+  //     const speed = 0.01; // Movement speed
+  //     const interval = setInterval(() => {
+  //       lat += (Math.random() - 0.5) * speed; // Random latitude change
+  //       lng += (Math.random() - 0.5) * speed; // Random longitude change
+  //       const locationData = {
+  //         driverId: "123", // This could be dynamic based on actual driver ID
+  //         latitude: lat,
+  //         longitude: lng,
+  //       };
+  //       // Emit location updates to the server
+  //       socket.emit("driverLocationUpdate", locationData);
+  //     }, 2000); // Update every 2 seconds
+  //     setMovementInterval(interval);
 
-      return () => clearInterval(interval); // Clean up on unmount
-    };
+  //     return () => clearInterval(interval); // Clean up on unmount
+  //   };
 
-    simulateDriverMovement();
+  //   simulateDriverMovement();
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(movementInterval);
-  }, [movementInterval]);
+  //   // Cleanup interval on component unmount
+  //   return () => clearInterval(movementInterval);
+  // }, [movementInterval]);
 
   if (!isLoaded) return <div>Loading Maps...</div>;
 

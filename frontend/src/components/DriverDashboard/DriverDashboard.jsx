@@ -37,9 +37,9 @@ export default function DriverDashboard() {
     <div className="driver-dashboard-container">
       <div className="header">
         <h1 className="main-title">Driver Dashboard</h1>
-        <div>
+        {/* <div>
           <DriverLocation />
-        </div>
+        </div> */}
       </div>
 
       <div className="booking-card">

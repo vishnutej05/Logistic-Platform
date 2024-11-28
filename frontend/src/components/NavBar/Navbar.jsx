@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { FiMenu, FiPackage, FiLogOut } from "react-icons/fi";
+import DriverLocation from "../DriverLocation/DriverLocation";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: "#ffffff",
@@ -78,7 +79,7 @@ const Navbar = () => {
                 fontSize: "1.2rem",
               }}
             >
-              GoodsBecho
+              Shiftly - Moving the Future, One Parcel at a Time
             </Typography>
           </LogoContainer>
 
@@ -136,6 +137,16 @@ const Navbar = () => {
               GoodsBecho
             </Typography>
           </LogoContainer>
+
+          <Box
+            sx={{
+              flexGrow: 0,
+              display: { xs: "none", md: "flex" },
+              gap: 2,
+            }}
+          >
+            {localStorage.getItem("role") === "driver" && <DriverLocation />}
+          </Box>
 
           <Box
             sx={{

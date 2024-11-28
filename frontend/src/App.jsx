@@ -4,7 +4,7 @@ import DeliveryLocation from "./components/DeliveryLocation/DeliveryLocation";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import CreateBooking from "./components/Booking/CreateBooking";
 import LoginForm from "./components/Auth/Login/LoginForm";
-import Homepage from "./components/Auth/Homepage";
+import Homepage from "./components/Homepage";
 import UserTracking from "./components/UserTracking/UserTrackingDriver";
 import DriverDashboard from "./components/DriverDashboard/DriverDashboard";
 import { AppProvider } from "./context/AppContext";
