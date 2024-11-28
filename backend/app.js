@@ -47,7 +47,7 @@ app.use("/api/vehicle", auth, vehicleRoutes);
 app.use("/api/admin", verifyAdmin, adminRoutes);
 
 app.get("/", async (req, res) => {
-  res.send("Welcome to ther server !");
+  res.send("Welcome to ther server !, These are the Routes /api/auth,  /api/bookings, /api/driver,  /api/vehicle,  /api/admin");
 });
 // Socket.IO for real-time tracking
 io.on("connection", (socket) => {
