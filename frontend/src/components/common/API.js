@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance with default configurations
 const site = axios.create({
-  baseURL: "http://localhost:5000/", // Adjust as needed
+  baseURL: "https://logistic-platform-backend.onrender.com/", // Adjust as needed
   headers: {
     "Content-Type": "application/json",
   },

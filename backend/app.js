@@ -10,7 +10,6 @@ dotenv.config();
 // Import Routes
 const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/booking");
-const fleetRoutes = require("./routes/fleet");
 const driverRoutes = require("./routes/drivers");
 const vehicleRoutes = require("./routes/vehicle");
 const adminRoutes = require("./routes/admin");
@@ -43,7 +42,6 @@ mongoose
 // Routes Middleware
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", auth, bookingRoutes);
-app.use("/api/fleet", auth, fleetRoutes);
 app.use("/api/driver", auth, driverRoutes);
 app.use("/api/vehicle", auth, vehicleRoutes);
 app.use("/api/admin", verifyAdmin, adminRoutes);
@@ -70,7 +68,7 @@ io.on("connection", (socket) => {
 });
 
 // Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
