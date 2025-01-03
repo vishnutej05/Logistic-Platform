@@ -1,6 +1,6 @@
 # Logistics Platform
 
-# Live https://logistic-platform-frontend.onrender.com/
+# Live https://shiftly.netlify.app/
 
 ## Overview
 
