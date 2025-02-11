@@ -7,7 +7,7 @@ import { useLoadScript } from "@react-google-maps/api";
 import site from "../common/API";
 import "./DriverLocation.css";
 
-const socket = io("http://localhost:5000"); // Replace with actual backend address
+const socket = io("https://logistic-platform-backend.onrender.com/"); // Replace with actual backend address
 
 const DriverLocation = () => {
   const [driverInfo, setDriverInfo] = useState({
