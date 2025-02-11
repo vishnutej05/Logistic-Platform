@@ -10,7 +10,7 @@ import {
 import AppContext from "../../context/AppContext";
 import "./UserTracking.css";
 
-const socket = io("http://localhost:5000"); // Replace with your server address
+const socket = io("https://logistic-platform-backend.onrender.com/"); // Replace with your server address
 
 const mapContainerStyle = {
   width: "95vw",
